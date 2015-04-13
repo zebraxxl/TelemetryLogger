@@ -19,7 +19,3 @@ def get_disk_io_counters():
 
 def get_disk_io_counters():
     return psutil.disk_io_counters(perdisk=True)
-
-
-def get_proc_disk_open_files(process):
-    return process.open_files()

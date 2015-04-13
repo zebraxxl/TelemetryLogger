@@ -17,7 +17,3 @@ def get_proc_mem_info(process):
 
 def get_proc_mem_percent(process):
     return process.memory_percent()
-
-
-def get_proc_mem_map(process):
-    return process.memory_maps()

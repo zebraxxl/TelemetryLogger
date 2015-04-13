@@ -7,21 +7,19 @@ from consts import ARGUMENT_OUTPUT, TELEMETRY_CPU_LOAD_AVG, ARGUMENT_TELEMETRY_T
     TELEMETRY_CPU_PERCENT_PER_CPU, TELEMETRY_CPU_TIMES_PERCENT, TELEMETRY_CPU_TIMES_PERCENT_PER_CPU, \
     TELEMETRY_MEM_SYSTEM, TELEMETRY_MEM_SWAP, TELEMETRY_DISK_USAGE, TELEMETRY_DISK_IO_COUNTERS, \
     TELEMETRY_DISK_IO_COUNTERS_PER_DISK, TELEMETRY_NET_IO_COUNTERS, TELEMETRY_NET_IO_COUNTERS_PER_NIC, \
-    TELEMETRY_NET_CONNECTIONS, ARGUMENT_PROCESSES, ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX, \
+    ARGUMENT_PROCESSES, ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX, \
     TELEMETRY_PROCESSES, PROCESS_INFO_PID, PROCESS_INFO_PPID, PROCESS_INFO_NAME, PROCESS_INFO_EXE, PROCESS_INFO_CMDLINE, \
     PROCESS_INFO_CREATE_TIME, PROCESS_INFO_STATUS, PROCESS_INFO_CWD, PROCESS_INFO_USERNAME, PROCESS_INFO_GIDS, \
     PROCESS_INFO_UIDS, PROCESS_INFO_TERMINAL, TELEMETRY_PROCESS_CPU_AFFINITY, TELEMETRY_PROCESS_MEM_INFO, \
-    TELEMETRY_PROCESS_MEM_PERCENT, TELEMETRY_PROCESS_MEM_MAP, TELEMETRY_PROCESS_DISK_OPEN_FILES, \
-    TELEMETRY_PROCESS_NET_CONNECTIONS, REMOTE_COMMAND_MARKER, REMOTE_COMMAND_MARKER_NAME, FRAME_TYPE_MARKER
+    TELEMETRY_PROCESS_MEM_PERCENT, REMOTE_COMMAND_MARKER, REMOTE_COMMAND_MARKER_NAME, FRAME_TYPE_MARKER
 from control import subscribe_to_command
 from logger import error
 from output import init_output_file, write_frame
 from telemetry.cpu import get_load_avg, get_cpu_times, get_cpu_times_per_cpu, get_cpu_percent, get_cpu_percent_per_cpu, \
     get_cpu_times_percent, get_cpu_times_percent_per_cpu, get_proc_cpu_affinity
-from telemetry.disk import get_disk_usage, get_disk_io_counters, get_proc_disk_open_files
-from telemetry.memory import get_mem_system, get_mem_swap, get_proc_mem_info, get_proc_mem_percent, get_proc_mem_map
-from telemetry.net import get_net_io_counters, get_net_io_counters_per_nic, get_net_connections, \
-    get_proc_net_connections
+from telemetry.disk import get_disk_usage, get_disk_io_counters
+from telemetry.memory import get_mem_system, get_mem_swap, get_proc_mem_info, get_proc_mem_percent
+from telemetry.net import get_net_io_counters, get_net_io_counters_per_nic
 
 __author__ = 'zebraxxl'
 
@@ -43,7 +41,6 @@ __telemetry_getters = {
 
     TELEMETRY_NET_IO_COUNTERS: get_net_io_counters,
     TELEMETRY_NET_IO_COUNTERS_PER_NIC: get_net_io_counters_per_nic,
-    TELEMETRY_NET_CONNECTIONS: get_net_connections,
 }
 
 __process_telemetry_getters = {
@@ -53,11 +50,6 @@ __process_telemetry_getters = {
 
     TELEMETRY_PROCESS_MEM_INFO: get_proc_mem_info,
     TELEMETRY_PROCESS_MEM_PERCENT: get_proc_mem_percent,
-    TELEMETRY_PROCESS_MEM_MAP: get_proc_mem_map,
-
-    TELEMETRY_PROCESS_DISK_OPEN_FILES: get_proc_disk_open_files,
-
-    TELEMETRY_PROCESS_NET_CONNECTIONS: get_proc_net_connections,
 }
 
 
