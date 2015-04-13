@@ -1,11 +1,9 @@
 from datetime import datetime
-import json
-import re
+import os
 import struct
 import cPickle
-from consts import ARGUMENT_COMMAND_PARAMETER, FRAME_TYPE_TELEMETRY, FRAME_TYPE_MARKER, SYSTEM_TELEMETRY, \
-    TELEMETRY_PROCESSES, ARGUMENT_OUTPUT, JSON_DUMP_INDENT
-from utils import check_dict_for_key
+from consts import ARGUMENT_COMMAND_PARAMETER, TEMPLATE_DIRECTORY_NAME, TEMPLATE_HTML_FILE_NAME, TEMPLATE_HEADER_BLOCK, \
+    TEMPLATE_STYLE_FILES, ARGUMENT_OUTPUT, TEMPLATE_JS_FILES
 
 __author__ = 'zebraxxl'
 
@@ -48,47 +46,27 @@ def __default_json_serializer(obj):
         pass
 
 
+def __make_header_block(template_path):
+    result = ''
+    for style_file_name in TEMPLATE_STYLE_FILES:
+        with open(os.path.join(template_path, style_file_name), 'r') as f:
+            result += '<style type="text/css">{0}</style>\n'.format(f.read())
+
+    for js_file_name in TEMPLATE_JS_FILES:
+        with open(os.path.join(template_path, js_file_name), 'r') as f:
+            result += '<script type="text/javascript">{0}</script>'.format(f.read())
+
+    return result
+
+
 def make_report(settings):
     frames = __read_all_frames(settings[ARGUMENT_COMMAND_PARAMETER])
 
-    system_telemetry = dict()
-    processes = dict()
-    markers = list()
-    frames_ids = list()
+    templates_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], TEMPLATE_DIRECTORY_NAME)
+    with open(os.path.join(templates_path, TEMPLATE_HTML_FILE_NAME), 'r') as f:
+        template = f.read()
 
-    for frame in frames:
-        frame_id = len(frames_ids)
-        frames_ids.append(frame[0])
-
-        if frame[1] == FRAME_TYPE_TELEMETRY:
-            for telemetry_value in frame[2]:
-                if telemetry_value[0] in SYSTEM_TELEMETRY:
-                    check_dict_for_key(system_telemetry, telemetry_value[0], list)
-                    system_telemetry[telemetry_value[0]].append((frame_id, telemetry_value[1]))
-                elif telemetry_value[0] == TELEMETRY_PROCESSES:
-                    for process_value in telemetry_value[1]:
-                        pattern = __process_pattern_to_string(process_value[0][1])
-                        process_info = process_value[1]
-
-                        check_dict_for_key(processes, pattern, dict)
-                        if process_info['pid'] not in processes[pattern]:
-                            processes[pattern][process_info['pid']] = (process_info, dict())
-                        else:
-                            __merge_process_info_dict(processes[pattern][process_info['pid']][0], process_info)
-
-                        process_telemetry = processes[pattern][process_info['pid']][1]
-
-                        for process_telemetry_value in process_value[2]:
-                            check_dict_for_key(process_telemetry, process_telemetry_value[0], list)
-                            process_telemetry[process_telemetry_value[0]].append((frame_id, process_telemetry_value[1]))
-                else:
-                    pass
-
-        elif frame[1] == FRAME_TYPE_MARKER:
-            markers.append((frame[0], frame[2]))
+    template = template.replace(TEMPLATE_HEADER_BLOCK, __make_header_block(templates_path))
 
     with open(settings[ARGUMENT_OUTPUT], 'w') as f:
-        f.write('system_telemetry = {0}\n'.format(json.dumps(system_telemetry, indent=JSON_DUMP_INDENT)))
-        f.write('processes = {0}\n'.format(json.dumps(processes, indent=JSON_DUMP_INDENT)))
-        f.write('markers = {0}\n'.format(json.dumps(markers, default=__default_json_serializer, indent=JSON_DUMP_INDENT)))
-        f.write('frames_ids = {0}\n'.format(json.dumps(frames_ids, default=__default_json_serializer, indent=JSON_DUMP_INDENT)))
+        f.write(template)

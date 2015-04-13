@@ -138,4 +138,10 @@ PROCESS_INFO_TERMINAL = 'terminal'
 REMOTE_COMMAND_MARKER = 'marker'
 REMOTE_COMMAND_MARKER_NAME = 'name'
 
-JSON_DUMP_INDENT = 4
+TEMPLATE_DIRECTORY_NAME = 'template'
+TEMPLATE_HTML_FILE_NAME = 'template.html'
+TEMPLATE_HEADER_BLOCK = '{{ header_block }}'
+TEMPLATE_CONTENT_BLOCK = '{{ content_block }}'
+TEMPLATE_END_BLOCK = '{{ end_block }}'
+TEMPLATE_STYLE_FILES = ['css/bootstrap.min.css', 'css/c3.min.css']
+TEMPLATE_JS_FILES = ['js/jquery.min.js', 'js/bootstrap.min.js', 'js/d3.min.js', 'js/c3.min.js']
