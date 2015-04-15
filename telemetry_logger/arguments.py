@@ -75,6 +75,7 @@ def __parse_argument(name, i, result):
         return i + 2
     elif name in __arguments_flags:
         result[name] = True
+        return i + 1
     elif name == 'help':
         result[ARGUMENT_SHOW_HELP] = True
         return i + 1

@@ -57,7 +57,17 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None):
             columns[i + 1].append(value[1][i])
 
     if settings[ARGUMENT_SPLIT_GRAPHS]:
-        pass
+        for i in xrange(len(names)):
+            graph_id = graph_id_counter.get_next_value()
+
+            params = deepcopy(GRAPH_STANDART_SETTINGS)
+            params['bindto'] = '#' + graph_id
+            params['size']['width'] = JavaScriptInJsonExpression('parent_width')
+            params['data']['columns'] = [columns[0], columns[i + 1]]
+            params['data']['names'] = {columns[i + 1][0]: names[columns[i + 1][0]]}
+
+            result += 'var parent_width = $("#{0}").parent().width();\n'.format(graph_id)
+            result += 'var chart = c3.generate({0});'.format(dump_javascript(params))
     else:
         graph_id = graph_id_counter.get_next_value()
 
