@@ -6,7 +6,7 @@ from consts import ARGUMENTS_DEFAULT, ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, 
     ARGUMENT_CONTROL_PORT, ARGUMENT_TELEMETRY_TYPES, ARGUMENT_PROCESSES, ARGUMENT_SHOW_HELP, TELEMETRY_TYPES_DELIMITER, \
     ALL_TELEMETRY, ARGUMENT_PROCESS_REGEX, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_PID, ARGUMENT_CONFIG_FILE, ARGUMENT_OUTPUT, \
     ARGUMENT_INTERVAL, ALL_COMMANDS, ARGUMENT_COMMAND, COMMAND_MARKER, ARGUMENT_COMMAND_PARAMETER, MAX_VALID_PORT, \
-    COMMAND_START, COMMAND_REPORT
+    COMMAND_START, COMMAND_REPORT, ARGUMENT_SPLIT_GRAPHS
 from utils import try_to_int
 
 __author__ = 'zebraxxl'
@@ -16,6 +16,7 @@ __only_write_arguments = frozenset({ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, AR
 __process_arguments = frozenset({ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX})
 __command_need_output = frozenset({COMMAND_START, COMMAND_REPORT})
 __command_need_parameter = frozenset({COMMAND_MARKER, COMMAND_REPORT})
+__arguments_flags = frozenset({ARGUMENT_SPLIT_GRAPHS})
 
 __cf_process_type = 'type'
 __cf_process_value = 'value'
@@ -72,6 +73,8 @@ def __parse_argument(name, i, result):
     if name in __only_write_arguments:
         result[name] = sys.argv[i + 1]
         return i + 2
+    elif name in __arguments_flags:
+        result[name] = True
     elif name == 'help':
         result[ARGUMENT_SHOW_HELP] = True
         return i + 1
@@ -214,6 +217,7 @@ def process_settings():
               '    --process_regex REGEX  - log telemetry for processes whose command line\n'
               '                             matches the regular expression REGEX\n'
               '    --config_file FILE     - load settings from file FILE\n'
+              '    --split_graphs         - split multiple graphs in report\n'
               'Supported telemetry types:\n'
               '    {supported_telemetry_types}\n'
               'Default values for settings:\n'
@@ -221,14 +225,16 @@ def process_settings():
               '    pid_file         {default_pid_file}\n'
               '    control_addr     {default_control_addr}\n'
               '    control_port     {default_control_port}\n'
-              '    telemetry_type   all supported'
+              '    telemetry_type   all supported\n'
+              '    split_graphs     {default_split_graphs}'
               .format(program_name=sys.argv[0],
                       telemetry_types_divide=TELEMETRY_TYPES_DELIMITER,
                       supported_telemetry_types=supported_telemetry_types,
                       default_interval=ARGUMENTS_DEFAULT[ARGUMENT_INTERVAL],
                       default_pid_file=ARGUMENTS_DEFAULT[ARGUMENT_PID_FILE],
                       default_control_addr=ARGUMENTS_DEFAULT[ARGUMENT_CONTROL_ADDR],
-                      default_control_port=ARGUMENTS_DEFAULT[ARGUMENT_CONTROL_PORT]))
+                      default_control_port=ARGUMENTS_DEFAULT[ARGUMENT_CONTROL_PORT],
+                      default_split_graphs=ARGUMENTS_DEFAULT[ARGUMENT_SPLIT_GRAPHS]))
         return None
 
     __validate_settings(result)
