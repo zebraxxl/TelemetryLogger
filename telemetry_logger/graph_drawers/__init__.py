@@ -1,4 +1,5 @@
 from copy import deepcopy
+from telemetry_logger.localization import get_string
 from telemetry_logger.consts import ARGUMENT_SPLIT_GRAPHS, JS_VAR_MARKERS_LINES
 from telemetry_logger.utils import JavaScriptInJsonExpression, dump_javascript
 
@@ -30,7 +31,12 @@ GRAPH_STANDART_SETTINGS = {
 
 
 def __get_name(i, value, override_names):
-    return str(i)
+    if override_names and len(override_names) > i:
+        return get_string(override_names[i])
+    elif hasattr(value, '_fields') and len(value._fields) > i:
+        return get_string(value._fields[i])
+    else:
+        return 'Data ' + str(i)
 
 
 def draw_line_graph(values, settings, graph_id_counter, override_names=None):
@@ -38,11 +44,12 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None):
 
     columns = list()
     columns.append(['x'])
-    names = list()
+    names = dict()
 
     for i in xrange(len(values[0][1])):
-        columns.append(['data{0}'.format(i)])
-        names.append(__get_name(i, values[0][1], override_names))
+        data_name = 'data{0}'.format(i)
+        columns.append([data_name])
+        names[data_name] = __get_name(i, values[0][1], override_names)
 
     for value in values:
         columns[0].append(value[0].strftime('%H:%M:%S.%f')[:-3])
@@ -58,6 +65,7 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None):
         params['bindto'] = '#' + graph_id
         params['size']['width'] = JavaScriptInJsonExpression('parent_width')
         params['data']['columns'] = columns
+        params['data']['names'] = names
 
         result += 'var parent_width = $("#{0}").parent().width();\n'.format(graph_id)
         result += 'var chart = c3.generate({0});'.format(dump_javascript(params))
