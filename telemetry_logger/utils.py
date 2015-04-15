@@ -1,8 +1,9 @@
 import json
 import re
+from consts import TEMPLATE_SCRIPTS_INDENT
 
 __author__ = 'zebraxxl'
-javascript_expression_extract = re.compile(ur'\"\{\{unquote(?P<expression>[\S\s]+)unquote\}\}\"')
+javascript_expression_extract = re.compile(ur'\"\{\{unquote(?P<expression>[\S\s]+?)unquote\}\}\"', flags=re.MULTILINE)
 
 
 class GraphIdCounter():
@@ -50,6 +51,6 @@ def dump_javascript(obj):
     def replace(m):
         return m.group('expression')
 
-    result = json.dumps(obj, default=__default)
+    result = json.dumps(obj, indent=TEMPLATE_SCRIPTS_INDENT, default=__default)
     return javascript_expression_extract.sub(replace, result)
 

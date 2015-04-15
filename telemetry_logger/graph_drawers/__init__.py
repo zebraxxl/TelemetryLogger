@@ -1,6 +1,6 @@
 from copy import deepcopy
-from telemetry_logger.consts import ARGUMENT_SPLIT_GRAPHS
-from utils import JavaScriptInJsonExpression, dump_javascript
+from telemetry_logger.consts import ARGUMENT_SPLIT_GRAPHS, JS_VAR_MARKERS_LINES
+from telemetry_logger.utils import JavaScriptInJsonExpression, dump_javascript
 
 __author__ = 'zebraxxl'
 
@@ -20,11 +20,11 @@ GRAPH_STANDART_SETTINGS = {
             'tick': {'format': '%H:%M:%S.%L'},
         },
     },
-    # 'grid': {
-    #     'x': {
-    #         'lines': None,
-    #     }
-    # },
+    'grid': {
+        'x': {
+            'lines': JavaScriptInJsonExpression(JS_VAR_MARKERS_LINES),
+        }
+    },
     'zoom': {'enabled': True}
 }
 
@@ -57,6 +57,7 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None):
         params = deepcopy(GRAPH_STANDART_SETTINGS)
         params['bindto'] = '#' + graph_id
         params['size']['width'] = JavaScriptInJsonExpression('parent_width')
+        params['data']['columns'] = columns
 
         result += 'var parent_width = $("#{0}").parent().width();\n'.format(graph_id)
         result += 'var chart = c3.generate({0});'.format(dump_javascript(params))

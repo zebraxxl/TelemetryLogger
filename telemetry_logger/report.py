@@ -4,10 +4,10 @@ import cPickle
 
 from consts import ARGUMENT_COMMAND_PARAMETER, TEMPLATE_DIRECTORY_NAME, TEMPLATE_HTML_FILE_NAME, TEMPLATE_HEADER_BLOCK, \
     TEMPLATE_STYLE_FILES, ARGUMENT_OUTPUT, TEMPLATE_JS_FILES, FRAME_TYPE_TELEMETRY, FRAME_TYPE_MARKER, \
-    TELEMETRY_PROCESSES, TELEMETRY_CPU_LOAD_AVG
-from localization import get_string, UNKNOWN_TELEMETRY_TYPE
+    TELEMETRY_PROCESSES, TELEMETRY_CPU_LOAD_AVG, TEMPLATE_CONTENT_BLOCK, TEMPLATE_END_BLOCK, JS_VAR_MARKERS_LINES
+from localization import get_string, UNKNOWN_TELEMETRY_TYPE, SYSTEM_TELEMETRY_STRING
 from graph_drawers.cpu_drawers import draw_cpu_loadavg
-from utils import GraphIdCounter
+from utils import GraphIdCounter, dump_javascript
 
 
 __author__ = 'zebraxxl'
@@ -73,6 +73,35 @@ def __draw_graph(tel_type, values, blocks, settings, graph_id_counter):
         return java_script
 
 
+def __get_html_for_block(title, content,  graph_id_counter):
+    block_id = graph_id_counter.get_next_value()
+    block_id_name = block_id + '_name'
+    block_id_body = block_id + '_body'
+
+    if isinstance(content, dict):
+        c = ''
+        for v in content:
+            c += __get_html_for_block(v, content[v], graph_id_counter)
+        content = c
+
+    result = '''<div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="{name}">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#{body}" aria-expanded="true" aria-controls="{body}">
+                                {title}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="{body}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{name}">
+                        <div class="panel-body">
+                            {content}
+                        </div>
+                    </div>
+                </div>'''.format(name=block_id_name, body=block_id_body, title=title, content=content)
+
+    return result
+
+
 def make_report(settings):
     frames = __read_all_frames(settings[ARGUMENT_COMMAND_PARAMETER])
 
@@ -96,12 +125,29 @@ def make_report(settings):
         elif frame[1] == FRAME_TYPE_MARKER:
             markers.append((frame[0], frame[2]))
 
-    # TODO: Override markers lines
+    js_markers = []
+    for marker in markers:
+        js_markers.append({
+            'value': marker[0].strftime('%H:%M:%S.%f')[:-3],
+            'text': marker[1],
+            'position': 'start',
+        })
+
     blocks = dict()
-    draw_script = ''
+    draw_script = '{0} = {1};\n'.format(JS_VAR_MARKERS_LINES, dump_javascript(js_markers))
     graph_id_counter = GraphIdCounter()
     for tel_type in telemetries:
         draw_script += __draw_graph(tel_type, telemetries[tel_type], blocks, settings, graph_id_counter)
+
+    content = __get_html_for_block(get_string(SYSTEM_TELEMETRY_STRING), blocks, graph_id_counter)
+    template = template.replace(TEMPLATE_CONTENT_BLOCK, content)
+    template = template.replace(TEMPLATE_END_BLOCK,
+                                '''<script type="text/javascript">
+                                    $(function(){{
+                                        {0}
+                                        $('.collapse .in').removeClass('in');
+                                    }});
+                                    </script>'''.format(draw_script))
 
     with open(settings[ARGUMENT_OUTPUT], 'w') as f:
         f.write(template)

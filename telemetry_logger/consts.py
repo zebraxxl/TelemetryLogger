@@ -140,6 +140,7 @@ PROCESS_INFO_TERMINAL = 'terminal'
 REMOTE_COMMAND_MARKER = 'marker'
 REMOTE_COMMAND_MARKER_NAME = 'name'
 
+TEMPLATE_SCRIPTS_INDENT = 2
 TEMPLATE_DIRECTORY_NAME = 'template'
 TEMPLATE_HTML_FILE_NAME = 'template.html'
 TEMPLATE_HEADER_BLOCK = '{{ header_block }}'
@@ -147,3 +148,5 @@ TEMPLATE_CONTENT_BLOCK = '{{ content_block }}'
 TEMPLATE_END_BLOCK = '{{ end_block }}'
 TEMPLATE_STYLE_FILES = ['css/bootstrap.min.css', 'css/c3.min.css']
 TEMPLATE_JS_FILES = ['js/jquery.min.js', 'js/bootstrap.min.js', 'js/d3.min.js', 'js/c3.min.js']
+
+JS_VAR_MARKERS_LINES = 'markers_lines'

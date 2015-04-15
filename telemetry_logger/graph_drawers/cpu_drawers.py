@@ -1,4 +1,4 @@
-from graph_drawers import draw_line_graph
+from telemetry_logger.graph_drawers import draw_line_graph
 
 __author__ = 'zebraxxl'
 
