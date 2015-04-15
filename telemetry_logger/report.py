@@ -4,7 +4,13 @@ import cPickle
 
 from consts import ARGUMENT_COMMAND_PARAMETER, TEMPLATE_DIRECTORY_NAME, TEMPLATE_HTML_FILE_NAME, TEMPLATE_HEADER_BLOCK, \
     TEMPLATE_STYLE_FILES, ARGUMENT_OUTPUT, TEMPLATE_JS_FILES, FRAME_TYPE_TELEMETRY, FRAME_TYPE_MARKER, \
-    TELEMETRY_PROCESSES, TELEMETRY_CPU_LOAD_AVG, TEMPLATE_CONTENT_BLOCK, TEMPLATE_END_BLOCK, JS_VAR_MARKERS_LINES
+    TELEMETRY_PROCESSES, TELEMETRY_CPU_LOAD_AVG, TEMPLATE_CONTENT_BLOCK, TEMPLATE_END_BLOCK, JS_VAR_MARKERS_LINES, \
+    TELEMETRY_FAMILY_CPU, TELEMETRY_CPU_TIMES, TELEMETRY_CPU_TIMES_PER_CPU, TELEMETRY_CPU_TIMES_PERCENT_PER_CPU, \
+    TELEMETRY_CPU_PERCENT, TELEMETRY_CPU_PERCENT_PER_CPU, TELEMETRY_CPU_TIMES_PERCENT, TELEMETRY_MEM_SYSTEM, \
+    TELEMETRY_MEM_SWAP, TELEMETRY_FAMILY_MEM, TELEMETRY_NET_IO_COUNTERS, TELEMETRY_NET_IO_COUNTERS_PER_NIC, \
+    TELEMETRY_FAMILY_NET, TELEMETRY_FAMILY_DISK, TELEMETRY_DISK_USAGE, TELEMETRY_DISK_IO_COUNTERS, \
+    TELEMETRY_DISK_IO_COUNTERS_PER_DISK, TELEMETRY_PROCESS_CPU_AFFINITY, TELEMETRY_PROCESS_MEM_INFO, \
+    TELEMETRY_PROCESS_MEM_PERCENT
 from localization import get_string, UNKNOWN_TELEMETRY_TYPE, SYSTEM_TELEMETRY_STRING
 from graph_drawers.cpu_drawers import draw_cpu_loadavg
 from utils import GraphIdCounter, dump_javascript
@@ -17,7 +23,27 @@ __GRAPH_DRAWERS = {
 }
 
 __TELEMETRY_FAMILIES = {
+    TELEMETRY_CPU_LOAD_AVG: TELEMETRY_FAMILY_CPU,
+    TELEMETRY_CPU_TIMES: TELEMETRY_FAMILY_CPU,
+    TELEMETRY_CPU_TIMES_PER_CPU: TELEMETRY_FAMILY_CPU,
+    TELEMETRY_CPU_PERCENT: TELEMETRY_FAMILY_CPU,
+    TELEMETRY_CPU_PERCENT_PER_CPU: TELEMETRY_FAMILY_CPU,
+    TELEMETRY_CPU_TIMES_PERCENT: TELEMETRY_FAMILY_CPU,
+    TELEMETRY_CPU_TIMES_PERCENT_PER_CPU: TELEMETRY_FAMILY_CPU,
 
+    TELEMETRY_MEM_SYSTEM: TELEMETRY_FAMILY_MEM,
+    TELEMETRY_MEM_SWAP: TELEMETRY_FAMILY_MEM,
+
+    TELEMETRY_DISK_USAGE: TELEMETRY_FAMILY_DISK,
+    TELEMETRY_DISK_IO_COUNTERS: TELEMETRY_FAMILY_DISK,
+    TELEMETRY_DISK_IO_COUNTERS_PER_DISK: TELEMETRY_FAMILY_DISK,
+
+    TELEMETRY_NET_IO_COUNTERS: TELEMETRY_FAMILY_NET,
+    TELEMETRY_NET_IO_COUNTERS_PER_NIC: TELEMETRY_FAMILY_NET,
+
+    TELEMETRY_PROCESS_CPU_AFFINITY: TELEMETRY_FAMILY_CPU,
+    TELEMETRY_PROCESS_MEM_INFO: TELEMETRY_FAMILY_CPU,
+    TELEMETRY_PROCESS_MEM_PERCENT: TELEMETRY_FAMILY_CPU,
 }
 
 
@@ -51,6 +77,12 @@ def __make_header_block(template_path):
 
 
 def __draw_graph(tel_type, values, blocks, settings, graph_id_counter):
+    if tel_type in __TELEMETRY_FAMILIES:
+        family_id = get_string(__TELEMETRY_FAMILIES[tel_type])
+        if family_id not in blocks:
+            blocks[family_id] = dict()
+        blocks = blocks[family_id]
+
     if tel_type not in __GRAPH_DRAWERS:
         blocks[get_string(tel_type)] = \
             '<div class="alert alert-danger" role="alert">{0}</div>'.format(get_string(UNKNOWN_TELEMETRY_TYPE))
@@ -58,12 +90,6 @@ def __draw_graph(tel_type, values, blocks, settings, graph_id_counter):
     else:
         marked_graph_id = graph_id_counter.mark_position()
         java_script = __GRAPH_DRAWERS[tel_type](values, settings, graph_id_counter)
-
-        if tel_type in __TELEMETRY_FAMILIES:
-            family_id = get_string(__TELEMETRY_FAMILIES[tel_type])
-            if family_id not in blocks:
-                blocks[family_id] = dict()
-            blocks = blocks[family_id]
 
         tel_type_name = get_string(tel_type)
         blocks[tel_type_name] = ''

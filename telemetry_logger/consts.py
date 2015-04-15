@@ -150,3 +150,8 @@ TEMPLATE_STYLE_FILES = ['css/bootstrap.min.css', 'css/c3.min.css']
 TEMPLATE_JS_FILES = ['js/jquery.min.js', 'js/bootstrap.min.js', 'js/d3.min.js', 'js/c3.min.js']
 
 JS_VAR_MARKERS_LINES = 'markers_lines'
+
+TELEMETRY_FAMILY_CPU = 'FAMILY_CPU'
+TELEMETRY_FAMILY_MEM = 'FAMILY_MEM'
+TELEMETRY_FAMILY_DISK = 'FAMILY_DISK'
+TELEMETRY_FAMILY_NET = 'FAMILY_NET'
