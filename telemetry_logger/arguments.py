@@ -6,7 +6,7 @@ from consts import ARGUMENTS_DEFAULT, ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, 
     ARGUMENT_CONTROL_PORT, ARGUMENT_TELEMETRY_TYPES, ARGUMENT_PROCESSES, ARGUMENT_SHOW_HELP, TELEMETRY_TYPES_DELIMITER, \
     ALL_TELEMETRY, ARGUMENT_PROCESS_REGEX, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_PID, ARGUMENT_CONFIG_FILE, ARGUMENT_OUTPUT, \
     ARGUMENT_INTERVAL, ALL_COMMANDS, ARGUMENT_COMMAND, COMMAND_MARKER, ARGUMENT_COMMAND_PARAMETER, MAX_VALID_PORT, \
-    COMMAND_START, COMMAND_REPORT, ARGUMENT_SPLIT_GRAPHS
+    COMMAND_START, COMMAND_REPORT, ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART
 from utils import try_to_int
 
 __author__ = 'zebraxxl'
@@ -16,7 +16,7 @@ __only_write_arguments = frozenset({ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, AR
 __process_arguments = frozenset({ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX})
 __command_need_output = frozenset({COMMAND_START, COMMAND_REPORT})
 __command_need_parameter = frozenset({COMMAND_MARKER, COMMAND_REPORT})
-__arguments_flags = frozenset({ARGUMENT_SPLIT_GRAPHS})
+__arguments_flags = frozenset({ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART})
 
 __cf_process_type = 'type'
 __cf_process_value = 'value'
@@ -219,6 +219,7 @@ def process_settings():
               '                             matches the regular expression REGEX\n'
               '    --config_file FILE     - load settings from file FILE\n'
               '    --split_graphs         - split multiple graphs in report\n'
+              '    --sub_chart            - show sub chart\n'
               'Supported telemetry types:\n'
               '    {supported_telemetry_types}\n'
               'Default values for settings:\n'
@@ -227,7 +228,8 @@ def process_settings():
               '    control_addr     {default_control_addr}\n'
               '    control_port     {default_control_port}\n'
               '    telemetry_type   all supported\n'
-              '    split_graphs     {default_split_graphs}'
+              '    split_graphs     {default_split_graphs}\n'
+              '    sub_char         {default_sub_chart}'
               .format(program_name=sys.argv[0],
                       telemetry_types_divide=TELEMETRY_TYPES_DELIMITER,
                       supported_telemetry_types=supported_telemetry_types,
@@ -235,7 +237,8 @@ def process_settings():
                       default_pid_file=ARGUMENTS_DEFAULT[ARGUMENT_PID_FILE],
                       default_control_addr=ARGUMENTS_DEFAULT[ARGUMENT_CONTROL_ADDR],
                       default_control_port=ARGUMENTS_DEFAULT[ARGUMENT_CONTROL_PORT],
-                      default_split_graphs=ARGUMENTS_DEFAULT[ARGUMENT_SPLIT_GRAPHS]))
+                      default_split_graphs=ARGUMENTS_DEFAULT[ARGUMENT_SPLIT_GRAPHS],
+                      default_sub_chart=ARGUMENTS_DEFAULT[ARGUMENT_SUB_CHART]))
         return None
 
     __validate_settings(result)

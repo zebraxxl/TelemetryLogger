@@ -93,6 +93,7 @@ ARGUMENT_CONFIG_FILE = 'config_file'
 ARGUMENT_OUTPUT = 'output'
 ARGUMENT_INTERVAL = 'interval'
 ARGUMENT_SPLIT_GRAPHS = 'split_graphs'
+ARGUMENT_SUB_CHART = 'sub_chart'
 
 ARGUMENT_PROCESS_PID = 'process_pid'
 ARGUMENT_PROCESS_PATH = 'process_path'
@@ -112,6 +113,7 @@ ARGUMENTS_DEFAULT = {
     ARGUMENT_OUTPUT: None,
     ARGUMENT_INTERVAL: 1.0,
     ARGUMENT_SPLIT_GRAPHS: False,
+    ARGUMENT_SUB_CHART: False,
 }
 
 COMMAND_START = 'start'

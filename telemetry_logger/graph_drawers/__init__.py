@@ -1,14 +1,14 @@
 from copy import deepcopy
 from telemetry_logger.localization import get_string
-from telemetry_logger.consts import ARGUMENT_SPLIT_GRAPHS, JS_VAR_MARKERS_LINES
+from telemetry_logger.consts import ARGUMENT_SPLIT_GRAPHS, JS_VAR_MARKERS_LINES, ARGUMENT_SUB_CHART
 from telemetry_logger.utils import JavaScriptInJsonExpression, dump_javascript
 
 __author__ = 'zebraxxl'
 
-GRAPH_STANDART_SETTINGS = {
+GRAPH_STANDARD_SETTINGS = {
     'size': {
         'height': 250,
-        'width': 500,
+        'width': JavaScriptInJsonExpression('parent_width'),
     },
     'data': {
         'x': 'x',
@@ -39,6 +39,16 @@ def __get_name(i, value, override_names):
         return 'Data ' + str(i)
 
 
+def get_new_standard_graph_settings(settings):
+    result = deepcopy(GRAPH_STANDARD_SETTINGS)
+
+    if settings[ARGUMENT_SUB_CHART]:
+        result['size']['height'] = 300
+        result['subchart'] = {'show': True}
+
+    return result
+
+
 def draw_line_graph(values, settings, graph_id_counter, override_names=None):
     result = ''
 
@@ -60,9 +70,8 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None):
         for i in xrange(len(names)):
             graph_id = graph_id_counter.get_next_value()
 
-            params = deepcopy(GRAPH_STANDART_SETTINGS)
+            params = get_new_standard_graph_settings(settings)
             params['bindto'] = '#' + graph_id
-            params['size']['width'] = JavaScriptInJsonExpression('parent_width')
             params['data']['columns'] = [columns[0], columns[i + 1]]
             params['data']['names'] = {columns[i + 1][0]: names[columns[i + 1][0]]}
 
@@ -71,9 +80,8 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None):
     else:
         graph_id = graph_id_counter.get_next_value()
 
-        params = deepcopy(GRAPH_STANDART_SETTINGS)
+        params = get_new_standard_graph_settings(settings)
         params['bindto'] = '#' + graph_id
-        params['size']['width'] = JavaScriptInJsonExpression('parent_width')
         params['data']['columns'] = columns
         params['data']['names'] = names
 
