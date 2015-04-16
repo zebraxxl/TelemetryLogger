@@ -49,6 +49,19 @@ def get_new_standard_graph_settings(settings):
     return result
 
 
+def __draw_graph(columns, names, graph_id_counter, settings):
+    graph_id = graph_id_counter.get_next_value()
+
+    params = get_new_standard_graph_settings(settings)
+    params['bindto'] = '#' + graph_id
+    params['data']['columns'] = columns
+    params['data']['names'] = names
+
+    result = 'var parent_width = $("#{0}").parent().width();\n'.format(graph_id)
+    result += 'var chart = c3.generate({0});'.format(dump_javascript(params))
+    return result
+
+
 def draw_line_graph(values, settings, graph_id_counter, override_names=None):
     result = ''
 
@@ -68,24 +81,9 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None):
 
     if settings[ARGUMENT_SPLIT_GRAPHS]:
         for i in xrange(len(names)):
-            graph_id = graph_id_counter.get_next_value()
-
-            params = get_new_standard_graph_settings(settings)
-            params['bindto'] = '#' + graph_id
-            params['data']['columns'] = [columns[0], columns[i + 1]]
-            params['data']['names'] = {columns[i + 1][0]: names[columns[i + 1][0]]}
-
-            result += 'var parent_width = $("#{0}").parent().width();\n'.format(graph_id)
-            result += 'var chart = c3.generate({0});'.format(dump_javascript(params))
+            result += __draw_graph([columns[0], columns[i + 1]], {columns[i + 1][0]: names[columns[i + 1][0]]},
+                                   graph_id_counter, settings)
     else:
-        graph_id = graph_id_counter.get_next_value()
-
-        params = get_new_standard_graph_settings(settings)
-        params['bindto'] = '#' + graph_id
-        params['data']['columns'] = columns
-        params['data']['names'] = names
-
-        result += 'var parent_width = $("#{0}").parent().width();\n'.format(graph_id)
-        result += 'var chart = c3.generate({0});'.format(dump_javascript(params))
+        result += __draw_graph(columns, names, graph_id_counter, settings)
 
     return result
