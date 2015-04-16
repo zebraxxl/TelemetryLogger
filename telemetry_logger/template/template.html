@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <title>Отчёт о телеметрии системы</title>
     {{ header_block }}
+    <script type="text/javascript">
+        function change_units(chart, original_columns, modifier, button_name, units_new_name) {
+            var new_columns = [original_columns[0]];
+            for (var i = 1; i < original_columns.length; i++) {
+                var column = [original_columns[i][0]];
+
+                for (var j = 1; j < original_columns[i].length; j++)
+                    column.push(original_columns[i][j] / modifier);
+
+                new_columns.push(column);
+            }
+            chart.load({'columns': new_columns});
+
+            $('#' + button_name).html(units_new_name + '<span class="caret"></span>');
+        }
+    </script>
 </head>
 <body>
     <h1>Телеметрия</h1>

@@ -1,4 +1,4 @@
-from telemetry_logger.graph_drawers import draw_line_graph
+from telemetry_logger.graph_drawers import draw_line_graph, TIME_UNITS
 
 __author__ = 'zebraxxl'
 
@@ -8,4 +8,4 @@ def draw_cpu_loadavg(values, settings, graph_id_counter):
 
 
 def draw_cpu_times(values, settings, graph_id_counter):
-    return draw_line_graph(values, settings, graph_id_counter)
+    return draw_line_graph(values, settings, graph_id_counter, units=TIME_UNITS)

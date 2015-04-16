@@ -1,5 +1,5 @@
 from copy import deepcopy
-from telemetry_logger.localization import get_string
+from telemetry_logger.localization import get_string, UNITS_STRING
 from telemetry_logger.consts import ARGUMENT_SPLIT_GRAPHS, JS_VAR_MARKERS_LINES, ARGUMENT_SUB_CHART
 from telemetry_logger.utils import JavaScriptInJsonExpression, dump_javascript
 
@@ -29,6 +29,13 @@ GRAPH_STANDARD_SETTINGS = {
     'zoom': {'enabled': True}
 }
 
+TIME_UNITS = {
+    'sec': 1,
+    'min': 60,
+    'hour': 3600,
+    'day': 86400,
+}
+
 
 def __get_name(i, value, override_names):
     if override_names and len(override_names) > i:
@@ -49,20 +56,77 @@ def get_new_standard_graph_settings(settings):
     return result
 
 
-def __draw_graph(columns, names, graph_id_counter, settings):
+def __draw_graph(columns, names, graph_id_counter, settings, units):
     graph_id = graph_id_counter.get_next_value()
+
+    chart_name = 'chart_' + graph_id
+    chart_data = chart_name + '_data'
 
     params = get_new_standard_graph_settings(settings)
     params['bindto'] = '#' + graph_id
-    params['data']['columns'] = columns
+    params['data']['columns'] = JavaScriptInJsonExpression(chart_data)
     params['data']['names'] = names
 
     result = 'var parent_width = $("#{0}").parent().width();\n'.format(graph_id)
-    result += 'var chart = c3.generate({0});'.format(dump_javascript(params))
+    result += '{chart_data} = {columns}\n'.format(chart_data=chart_data, columns=columns)
+    result += '{chart_name} = c3.generate({params});'.format(chart_name=chart_name, params=dump_javascript(params))
+
+    if units:
+        button_id = chart_name + '_units_button'
+        default_units = get_string(units[units.keys()[0]])
+
+        for unit in units:
+            if units[unit] == 1:
+                default_units = get_string(unit)
+                break
+
+        result += '''
+        $('#{graph_id}').before('{units_string}: ').before(
+            $('<div></div>', {{'class': 'dropdown', 'style': 'display: inline'}}).append(
+                $('<button></button>', {{
+                    'id': '{button_id}',
+                    'type': 'button',
+                    'data-toggle': 'dropdown',
+                    'aria-haspopup': 'true',
+                    'aria-expanded': 'false',
+                }}).append('{default_units} <span class="caret"></span>')
+            ).append(
+                $('<ul></ul>', {{
+                    'class': 'dropdown-menu',
+                    'role': 'menu',
+                    'aria-labelledby': '{button_id}',
+                }})'''.format(graph_id=graph_id, button_id=button_id, default_units=default_units,
+                              units_string=get_string(UNITS_STRING))
+
+        for unit in units:
+            result += '''
+                .append(
+                    $('<li></li>', {{
+                        'role': 'presentation'
+                    }}).append(
+                        $('<a></a>', {{
+                            'role': 'menuitem',
+                            'tabindex': '-1',
+                            'href': '#',
+                            'text': '{unit_name}',
+                            'click': function() {{
+                                change_units({chart_name}, {chart_data}, {unit_value}, '{button_id}', '{unit_name}');
+                            }}
+                        }})
+                    )
+                )
+            '''.format(unit_name=get_string(unit), unit_value=units[unit], chart_name=chart_name, chart_data=chart_data,
+                       button_id=button_id)
+
+        result += '''
+            )
+        );
+        '''
+
     return result
 
 
-def draw_line_graph(values, settings, graph_id_counter, override_names=None):
+def draw_line_graph(values, settings, graph_id_counter, override_names=None, units=None):
     result = ''
 
     columns = list()
@@ -82,8 +146,8 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None):
     if settings[ARGUMENT_SPLIT_GRAPHS]:
         for i in xrange(len(names)):
             result += __draw_graph([columns[0], columns[i + 1]], {columns[i + 1][0]: names[columns[i + 1][0]]},
-                                   graph_id_counter, settings)
+                                   graph_id_counter, settings, units)
     else:
-        result += __draw_graph(columns, names, graph_id_counter, settings)
+        result += __draw_graph(columns, names, graph_id_counter, settings, units)
 
     return result

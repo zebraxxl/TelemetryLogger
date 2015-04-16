@@ -10,10 +10,12 @@ __author__ = 'zebraxxl'
 
 UNKNOWN_TELEMETRY_TYPE = 'UNKNOWN_TELEMETRY_TYPE'
 SYSTEM_TELEMETRY_STRING = 'SYSTEM_TELEMETRY'
+UNITS_STRING = 'UNITS_STRING'
 
 __LOCALIZED_STRINGS = {
     UNKNOWN_TELEMETRY_TYPE: 'Неизвестный тип телеметрии',
     SYSTEM_TELEMETRY_STRING: 'Системная телеметрия',
+    UNITS_STRING: 'Единицы измерения',
 
     TELEMETRY_FAMILY_CPU: 'Процессор',
     TELEMETRY_FAMILY_MEM: 'Память',
@@ -45,6 +47,11 @@ __LOCALIZED_STRINGS = {
     '1 min': '1 мин',
     '5 min': '5 мин',
     '15 min': '15 мин',
+
+    'sec': 'секунды',
+    'min': 'минуты',
+    'hour': 'часы',
+    'day': 'дни',
 }
 
 
