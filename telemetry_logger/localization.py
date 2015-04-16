@@ -11,11 +11,13 @@ __author__ = 'zebraxxl'
 UNKNOWN_TELEMETRY_TYPE = 'UNKNOWN_TELEMETRY_TYPE'
 SYSTEM_TELEMETRY_STRING = 'SYSTEM_TELEMETRY'
 UNITS_STRING = 'UNITS_STRING'
+CPU_INDEX_STRING = 'CPU_INDEX'
 
 __LOCALIZED_STRINGS = {
     UNKNOWN_TELEMETRY_TYPE: 'Неизвестный тип телеметрии',
     SYSTEM_TELEMETRY_STRING: 'Системная телеметрия',
     UNITS_STRING: 'Единицы измерения',
+    CPU_INDEX_STRING: 'ЦПУ {index}',
 
     TELEMETRY_FAMILY_CPU: 'Процессор',
     TELEMETRY_FAMILY_MEM: 'Память',

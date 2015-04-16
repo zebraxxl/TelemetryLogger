@@ -12,7 +12,7 @@ from consts import ARGUMENT_COMMAND_PARAMETER, TEMPLATE_DIRECTORY_NAME, TEMPLATE
     TELEMETRY_DISK_IO_COUNTERS_PER_DISK, TELEMETRY_PROCESS_CPU_AFFINITY, TELEMETRY_PROCESS_MEM_INFO, \
     TELEMETRY_PROCESS_MEM_PERCENT
 from localization import get_string, UNKNOWN_TELEMETRY_TYPE, SYSTEM_TELEMETRY_STRING
-from graph_drawers.cpu_drawers import draw_cpu_loadavg, draw_cpu_times
+from graph_drawers.cpu_drawers import draw_cpu_loadavg, draw_cpu_times, draw_cpu_times_per_cpu
 from utils import GraphIdCounter, dump_javascript
 
 
@@ -21,6 +21,7 @@ __author__ = 'zebraxxl'
 __GRAPH_DRAWERS = {
     TELEMETRY_CPU_LOAD_AVG: draw_cpu_loadavg,
     TELEMETRY_CPU_TIMES: draw_cpu_times,
+    TELEMETRY_CPU_TIMES_PER_CPU: draw_cpu_times_per_cpu,
 }
 
 __TELEMETRY_FAMILIES = {

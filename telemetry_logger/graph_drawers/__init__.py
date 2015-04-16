@@ -56,9 +56,7 @@ def get_new_standard_graph_settings(settings):
     return result
 
 
-def __draw_graph(columns, names, graph_id_counter, settings, units):
-    graph_id = graph_id_counter.get_next_value()
-
+def __draw_graph(columns, names, graph_id, settings, units):
     chart_name = 'chart_' + graph_id
     chart_data = chart_name + '_data'
 
@@ -146,8 +144,32 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None, uni
     if settings[ARGUMENT_SPLIT_GRAPHS]:
         for i in xrange(len(names)):
             result += __draw_graph([columns[0], columns[i + 1]], {columns[i + 1][0]: names[columns[i + 1][0]]},
-                                   graph_id_counter, settings, units)
+                                   graph_id_counter.get_next_value(), settings, units)
     else:
-        result += __draw_graph(columns, names, graph_id_counter, settings, units)
+        result += __draw_graph(columns, names, graph_id_counter.get_next_value(), settings, units)
+
+    return result
+
+
+def draw_per_smth_line_graphs(values, settings, graph_id_counter, title_format_string, override_names=None, units=None):
+    result = ''
+
+    graphs = dict()
+    for i in xrange(len(values)):
+        time = values[i][0]
+        v = values[i][1]
+
+        for j in xrange(len(v)):
+            if j not in graphs:
+                graphs[j] = list()
+            graphs[j].append((time, v[j]))
+
+    for i in graphs:
+        title_id = graph_id_counter.get_next_value()
+
+        result += draw_line_graph(graphs[i], settings, graph_id_counter, override_names, units)
+
+        result += '$("#{title_id}").html("<center><h3>{title}</h3></center>");\n'\
+            .format(title_id=title_id, title=get_string(title_format_string).format(index=i))
 
     return result
