@@ -13,7 +13,7 @@ from consts import ARGUMENT_COMMAND_PARAMETER, TEMPLATE_DIRECTORY_NAME, TEMPLATE
     TELEMETRY_PROCESS_MEM_PERCENT
 from localization import get_string, UNKNOWN_TELEMETRY_TYPE, SYSTEM_TELEMETRY_STRING
 from graph_drawers.cpu_drawers import draw_cpu_loadavg, draw_cpu_times, draw_cpu_times_per_cpu, draw_cpu_percent, \
-    draw_cpu_percent_per_cpu, draw_cpu_times_percent
+    draw_cpu_percent_per_cpu, draw_cpu_times_percent, draw_cpu_times_percent_per_cpu
 from utils import GraphIdCounter, dump_javascript
 
 
@@ -26,6 +26,7 @@ __GRAPH_DRAWERS = {
     TELEMETRY_CPU_PERCENT: draw_cpu_percent,
     TELEMETRY_CPU_PERCENT_PER_CPU: draw_cpu_percent_per_cpu,
     TELEMETRY_CPU_TIMES_PERCENT: draw_cpu_times_percent,
+    TELEMETRY_CPU_TIMES_PERCENT_PER_CPU: draw_cpu_times_percent_per_cpu,
 }
 
 __TELEMETRY_FAMILIES = {
