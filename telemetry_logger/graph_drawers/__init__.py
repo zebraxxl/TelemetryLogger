@@ -131,15 +131,23 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None, uni
     columns.append(['x'])
     names = dict()
 
-    for i in xrange(len(values[0][1])):
-        data_name = 'data{0}'.format(i)
-        columns.append([data_name])
-        names[data_name] = __get_name(i, values[0][1], override_names)
+    if isinstance(values[0][1], float) or isinstance(values[0][1], int):
+        columns.append(['data'])
+        names['data'] = __get_name(0, values[0][0], override_names)
+    else:
+        for i in xrange(len(values[0][1])):
+            data_name = 'data{0}'.format(i)
+            columns.append([data_name])
+            names[data_name] = __get_name(i, values[0][1], override_names)
 
     for value in values:
         columns[0].append(value[0].strftime('%H:%M:%S.%f')[:-3])
-        for i in xrange(len(value[1])):
-            columns[i + 1].append(value[1][i])
+
+        if isinstance(values[0][1], float) or isinstance(values[0][1], int):
+            columns[1].append(value[1])
+        else:
+            for i in xrange(len(value[1])):
+                columns[i + 1].append(value[1][i])
 
     if settings[ARGUMENT_SPLIT_GRAPHS]:
         for i in xrange(len(names)):
