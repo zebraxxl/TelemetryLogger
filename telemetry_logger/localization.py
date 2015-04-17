@@ -13,6 +13,7 @@ SYSTEM_TELEMETRY_STRING = 'SYSTEM_TELEMETRY'
 UNITS_STRING = 'UNITS_STRING'
 CPU_INDEX_STRING = 'CPU_INDEX'
 PERCENTS_STRING = 'PERCENTS'
+DISK_NAME_STRING = 'DISK_NAME'
 
 __LOCALIZED_STRINGS = {
     UNKNOWN_TELEMETRY_TYPE: 'Неизвестный тип телеметрии',
@@ -20,6 +21,7 @@ __LOCALIZED_STRINGS = {
     UNITS_STRING: 'Единицы измерения',
     CPU_INDEX_STRING: 'ЦПУ {index}',
     PERCENTS_STRING: 'Проценты',
+    DISK_NAME_STRING: 'Точка монтирования: {index}',
 
     TELEMETRY_FAMILY_CPU: 'Процессор',
     TELEMETRY_FAMILY_MEM: 'Память',

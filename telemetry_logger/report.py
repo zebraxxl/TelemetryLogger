@@ -11,6 +11,7 @@ from consts import ARGUMENT_COMMAND_PARAMETER, TEMPLATE_DIRECTORY_NAME, TEMPLATE
     TELEMETRY_FAMILY_NET, TELEMETRY_FAMILY_DISK, TELEMETRY_DISK_USAGE, TELEMETRY_DISK_IO_COUNTERS, \
     TELEMETRY_DISK_IO_COUNTERS_PER_DISK, TELEMETRY_PROCESS_CPU_AFFINITY, TELEMETRY_PROCESS_MEM_INFO, \
     TELEMETRY_PROCESS_MEM_PERCENT
+from graph_drawers.disk_drawers import draw_disk_usage
 from graph_drawers.mem_drawers import draw_mem_system, draw_mem_swap
 from localization import get_string, UNKNOWN_TELEMETRY_TYPE, SYSTEM_TELEMETRY_STRING
 from graph_drawers.cpu_drawers import draw_cpu_loadavg, draw_cpu_times, draw_cpu_times_per_cpu, draw_cpu_percent, \
@@ -31,6 +32,8 @@ __GRAPH_DRAWERS = {
 
     TELEMETRY_MEM_SYSTEM: draw_mem_system,
     TELEMETRY_MEM_SWAP: draw_mem_swap,
+
+    TELEMETRY_DISK_USAGE: draw_disk_usage,
 }
 
 __TELEMETRY_FAMILIES = {

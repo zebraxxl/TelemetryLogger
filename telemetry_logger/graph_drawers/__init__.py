@@ -178,25 +178,39 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None, uni
     return result
 
 
-def draw_per_smth_line_graphs(values, settings, graph_id_counter, title_format_string, override_names=None, units=None):
+def draw_per_smth_line_graphs(values, settings, graph_id_counter, title_format_string, override_names=None, units=None,
+                              ignore_sub_graphs=list()):
     result = ''
 
     graphs = dict()
+    names = dict()
+
     for i in xrange(len(values)):
         time = values[i][0]
         v = values[i][1]
 
-        for j in xrange(len(v)):
-            if j not in graphs:
-                graphs[j] = list()
-            graphs[j].append((time, v[j]))
+        if isinstance(v, list):
+            for j in xrange(len(v)):
+                if j not in graphs:
+                    graphs[j] = list()
+                    names[j] = j
+                graphs[j].append((time, v[j]))
+
+        elif isinstance(v, dict):
+            j = 0
+            for k in v:
+                if j not in graphs:
+                    graphs[j] = list()
+                    names[j] = k
+                graphs[j].append((time, v[k]))
+                j += 1
 
     for i in graphs:
         title_id = graph_id_counter.get_next_value()
 
-        result += draw_line_graph(graphs[i], settings, graph_id_counter, override_names, units)
+        result += draw_line_graph(graphs[i], settings, graph_id_counter, override_names, units, ignore_sub_graphs)
 
         result += '$("#{title_id}").html("<center><h3>{title}</h3></center>");\n'\
-            .format(title_id=title_id, title=get_string(title_format_string).format(index=i))
+            .format(title_id=title_id, title=get_string(title_format_string).format(index=names[i]))
 
     return result
