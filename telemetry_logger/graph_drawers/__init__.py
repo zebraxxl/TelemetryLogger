@@ -36,10 +36,21 @@ TIME_UNITS = {
     'day': 86400,
 }
 
+SIZE_UNITS = {
+    'bytes': 1,
+    'kbytes': 1024,
+    'mbytes': 1048576,
+    'gbytes': 1073741824,
+    'tbytes': 1099511627776,
+    'pbytes': 1125899906842624,     # Seriously? =)
+}
+
 
 def __get_name(i, value, override_names):
-    if override_names and len(override_names) > i:
+    if override_names and isinstance(override_names, list) and len(override_names) > i:
         return get_string(override_names[i])
+    elif override_names and isinstance(override_names, basestring):
+        return get_string(override_names)
     elif hasattr(value, '_fields') and len(value._fields) > i:
         return get_string(value._fields[i])
     else:
@@ -66,7 +77,7 @@ def __draw_graph(columns, names, graph_id, settings, units):
     params['data']['names'] = names
 
     result = 'var parent_width = $("#{0}").parent().width();\n'.format(graph_id)
-    result += '{chart_data} = {columns}\n'.format(chart_data=chart_data, columns=columns)
+    result += '{chart_data} = {columns}\n'.format(chart_data=chart_data, columns=dump_javascript(columns))
     result += '{chart_name} = c3.generate({params});'.format(chart_name=chart_name, params=dump_javascript(params))
 
     if units:
@@ -124,21 +135,27 @@ def __draw_graph(columns, names, graph_id, settings, units):
     return result
 
 
-def draw_line_graph(values, settings, graph_id_counter, override_names=None, units=None):
+def draw_line_graph(values, settings, graph_id_counter, override_names=None, units=None, ignore_sub_graphs=list()):
     result = ''
 
     columns = list()
     columns.append(['x'])
     names = dict()
+    oindex2rindex = dict()
 
     if isinstance(values[0][1], float) or isinstance(values[0][1], int):
         columns.append(['data'])
         names['data'] = __get_name(0, values[0][0], override_names)
     else:
         for i in xrange(len(values[0][1])):
+            oindex2rindex[i] = None
+            if hasattr(values[0][1], '_fields') and values[0][1]._fields[i] in ignore_sub_graphs:
+                continue
+
             data_name = 'data{0}'.format(i)
             columns.append([data_name])
             names[data_name] = __get_name(i, values[0][1], override_names)
+            oindex2rindex[i] = len(columns) - 1
 
     for value in values:
         columns[0].append(value[0].strftime('%H:%M:%S.%f')[:-3])
@@ -147,7 +164,9 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None, uni
             columns[1].append(value[1])
         else:
             for i in xrange(len(value[1])):
-                columns[i + 1].append(value[1][i])
+                if not (oindex2rindex[i] is None):
+                    index = oindex2rindex[i]
+                    columns[index].append(value[1][i])
 
     if settings[ARGUMENT_SPLIT_GRAPHS]:
         for i in xrange(len(names)):

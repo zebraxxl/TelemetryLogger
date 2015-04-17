@@ -56,6 +56,13 @@ __LOCALIZED_STRINGS = {
     'min': 'минуты',
     'hour': 'часы',
     'day': 'дни',
+
+    'bytes': 'байты',
+    'kbytes': 'килобайты',
+    'mbytes': 'мегабайты',
+    'gbytes': 'гигабайты',
+    'tbytes': 'терабайты',
+    'pbytes': 'петабайты =)',     # Seriously? =)
 }
 
 
