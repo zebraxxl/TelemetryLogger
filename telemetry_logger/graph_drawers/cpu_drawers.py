@@ -18,3 +18,7 @@ def draw_cpu_times_per_cpu(values, settings, graph_id_counter):
 
 def draw_cpu_percent(values, settings, graph_id_counter):
     return draw_line_graph(values, settings, graph_id_counter, override_names=[PERCENTS_STRING])
+
+
+def draw_cpu_percent_per_cpu(values, settings, graph_id_counter):
+    return draw_per_smth_line_graphs(values, settings, graph_id_counter, CPU_INDEX_STRING)
