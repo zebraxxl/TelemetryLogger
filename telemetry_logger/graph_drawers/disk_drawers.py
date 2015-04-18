@@ -1,4 +1,4 @@
-from telemetry_logger.localization import DISK_NAME_STRING, PERCENTS_STRING
+from telemetry_logger.localization import DISK_MOUNT_POINT_STRING, PERCENTS_STRING, DISK_NAME_STRING
 from telemetry_logger.graph_drawers import SIZE_UNITS, draw_per_smth_line_graphs, draw_line_graph, \
     TIME_UNITS_MILLISECONDS
 
@@ -11,7 +11,7 @@ def __draw_disk_usage(v, s, g):
 
 
 def draw_disk_usage(values, settings, graph_id_counter):
-    return draw_per_smth_line_graphs(values, settings, graph_id_counter, DISK_NAME_STRING, __draw_disk_usage)
+    return draw_per_smth_line_graphs(values, settings, graph_id_counter, DISK_MOUNT_POINT_STRING, __draw_disk_usage)
 
 
 def draw_disk_io_counters(values, settings, graph_id_counter):
@@ -22,3 +22,7 @@ def draw_disk_io_counters(values, settings, graph_id_counter):
     result += draw_line_graph(values, settings, graph_id_counter, units=TIME_UNITS_MILLISECONDS,
                               ignore_sub_graphs=['read_count', 'write_count', 'read_bytes', 'write_bytes'])
     return result
+
+
+def draw_disk_io_counters_per_disk(values, settings, graph_id_counter):
+    return draw_per_smth_line_graphs(values, settings, graph_id_counter, DISK_NAME_STRING, draw_disk_io_counters)
