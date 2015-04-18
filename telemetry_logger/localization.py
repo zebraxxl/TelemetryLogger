@@ -15,6 +15,7 @@ CPU_INDEX_STRING = 'CPU_INDEX'
 PERCENTS_STRING = 'PERCENTS'
 DISK_MOUNT_POINT_STRING = 'DISK_MOUNT_POINT'
 DISK_NAME_STRING = 'DISK_NAME'
+NIC_STRING = 'NIC_STRING'
 
 __LOCALIZED_STRINGS = {
     UNKNOWN_TELEMETRY_TYPE: 'Неизвестный тип телеметрии',
@@ -24,6 +25,7 @@ __LOCALIZED_STRINGS = {
     PERCENTS_STRING: 'Проценты',
     DISK_MOUNT_POINT_STRING: 'Точка монтирования: {index}',
     DISK_NAME_STRING: 'Диск: {index}',
+    NIC_STRING: 'Сетевое устройство: {index}',
 
     TELEMETRY_FAMILY_CPU: 'Процессор',
     TELEMETRY_FAMILY_MEM: 'Память',

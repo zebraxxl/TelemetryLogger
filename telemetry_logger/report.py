@@ -13,6 +13,7 @@ from consts import ARGUMENT_COMMAND_PARAMETER, TEMPLATE_DIRECTORY_NAME, TEMPLATE
     TELEMETRY_PROCESS_MEM_PERCENT
 from graph_drawers.disk_drawers import draw_disk_usage, draw_disk_io_counters, draw_disk_io_counters_per_disk
 from graph_drawers.mem_drawers import draw_mem_system, draw_mem_swap
+from graph_drawers.net_drawers import draw_net_io_counters, draw_net_io_counters_per_nic
 from localization import get_string, UNKNOWN_TELEMETRY_TYPE, SYSTEM_TELEMETRY_STRING
 from graph_drawers.cpu_drawers import draw_cpu_loadavg, draw_cpu_times, draw_cpu_times_per_cpu, draw_cpu_percent, \
     draw_cpu_percent_per_cpu, draw_cpu_times_percent, draw_cpu_times_percent_per_cpu
@@ -36,6 +37,9 @@ __GRAPH_DRAWERS = {
     TELEMETRY_DISK_USAGE: draw_disk_usage,
     TELEMETRY_DISK_IO_COUNTERS: draw_disk_io_counters,
     TELEMETRY_DISK_IO_COUNTERS_PER_DISK: draw_disk_io_counters_per_disk,
+
+    TELEMETRY_NET_IO_COUNTERS: draw_net_io_counters,
+    TELEMETRY_NET_IO_COUNTERS_PER_NIC: draw_net_io_counters_per_nic,
 }
 
 __TELEMETRY_FAMILIES = {
