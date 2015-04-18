@@ -17,7 +17,7 @@ from logger import error
 from output import init_output_file, write_frame
 from telemetry.cpu import get_load_avg, get_cpu_times, get_cpu_times_per_cpu, get_cpu_percent, get_cpu_percent_per_cpu, \
     get_cpu_times_percent, get_cpu_times_percent_per_cpu, get_proc_cpu_affinity
-from telemetry.disk import get_disk_usage, get_disk_io_counters
+from telemetry.disk import get_disk_usage, get_disk_io_counters, get_disk_io_counters_per_disk
 from telemetry.memory import get_mem_system, get_mem_swap, get_proc_mem_info, get_proc_mem_percent
 from telemetry.net import get_net_io_counters, get_net_io_counters_per_nic
 
@@ -37,7 +37,7 @@ __telemetry_getters = {
 
     TELEMETRY_DISK_USAGE: get_disk_usage,
     TELEMETRY_DISK_IO_COUNTERS: get_disk_io_counters,
-    TELEMETRY_DISK_IO_COUNTERS_PER_DISK: get_disk_io_counters,
+    TELEMETRY_DISK_IO_COUNTERS_PER_DISK: get_disk_io_counters_per_disk,
 
     TELEMETRY_NET_IO_COUNTERS: get_net_io_counters,
     TELEMETRY_NET_IO_COUNTERS_PER_NIC: get_net_io_counters_per_nic,

@@ -40,7 +40,7 @@ __LOCALIZED_STRINGS = {
     TELEMETRY_MEM_SWAP: 'Раздел подкачки',
 
     TELEMETRY_DISK_USAGE: 'Использование диска',
-    TELEMETRY_DISK_IO_COUNTERS: 'Ввод/Вывод диска',
+    TELEMETRY_DISK_IO_COUNTERS: 'Общий ввод/вывод',
     TELEMETRY_DISK_IO_COUNTERS_PER_DISK: 'Ввод/Вывод по отдельным дискам',
 
     TELEMETRY_NET_IO_COUNTERS: 'Ввод/Вывод сети',
@@ -54,6 +54,7 @@ __LOCALIZED_STRINGS = {
     '5 min': '5 мин',
     '15 min': '15 мин',
 
+    'msec': 'милисекунды',
     'sec': 'секунды',
     'min': 'минуты',
     'hour': 'часы',

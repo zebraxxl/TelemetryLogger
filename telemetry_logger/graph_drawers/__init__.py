@@ -36,6 +36,14 @@ TIME_UNITS = {
     'day': 86400,
 }
 
+TIME_UNITS_MILLISECONDS = {
+    'msec': 1,
+    'sec': 1000,
+    'min': 60000,
+    'hour': 3600000,
+    'day': 86400000,
+}
+
 SIZE_UNITS = {
     'bytes': 1,
     'kbytes': 1024,

@@ -1,4 +1,4 @@
-from localization import CPU_INDEX_STRING, PERCENTS_STRING
+from telemetry_logger.localization import CPU_INDEX_STRING, PERCENTS_STRING
 from telemetry_logger.graph_drawers import draw_line_graph, TIME_UNITS, draw_per_smth_line_graphs
 
 __author__ = 'zebraxxl'
