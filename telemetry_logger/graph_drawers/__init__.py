@@ -178,9 +178,10 @@ def draw_line_graph(values, settings, graph_id_counter, override_names=None, uni
     return result
 
 
-def draw_per_smth_line_graphs(values, settings, graph_id_counter, title_format_string, override_names=None, units=None,
-                              ignore_sub_graphs=list()):
+def draw_per_smth_line_graphs(values, settings, graph_id_counter, title_format_string, draw_graph=None):
     result = ''
+    if draw_graph is None:
+        draw_graph = draw_line_graph
 
     graphs = dict()
     names = dict()
@@ -208,7 +209,7 @@ def draw_per_smth_line_graphs(values, settings, graph_id_counter, title_format_s
     for i in graphs:
         title_id = graph_id_counter.get_next_value()
 
-        result += draw_line_graph(graphs[i], settings, graph_id_counter, override_names, units, ignore_sub_graphs)
+        result += draw_graph(graphs[i], settings, graph_id_counter)
 
         result += '$("#{title_id}").html("<center><h3>{title}</h3></center>");\n'\
             .format(title_id=title_id, title=get_string(title_format_string).format(index=names[i]))

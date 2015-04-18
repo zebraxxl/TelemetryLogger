@@ -13,7 +13,8 @@ def draw_cpu_times(values, settings, graph_id_counter):
 
 
 def draw_cpu_times_per_cpu(values, settings, graph_id_counter):
-    return draw_per_smth_line_graphs(values, settings, graph_id_counter, CPU_INDEX_STRING, units=TIME_UNITS)
+    return draw_per_smth_line_graphs(values, settings, graph_id_counter, CPU_INDEX_STRING,
+                                     lambda v, s, g: draw_line_graph(v, s, g, units=TIME_UNITS))
 
 
 def draw_cpu_percent(values, settings, graph_id_counter):
