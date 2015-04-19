@@ -10,13 +10,13 @@ from consts import ARGUMENT_OUTPUT, TELEMETRY_CPU_LOAD_AVG, ARGUMENT_TELEMETRY_T
     ARGUMENT_PROCESSES, ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX, \
     TELEMETRY_PROCESSES, PROCESS_INFO_PID, PROCESS_INFO_PPID, PROCESS_INFO_NAME, PROCESS_INFO_EXE, PROCESS_INFO_CMDLINE, \
     PROCESS_INFO_CREATE_TIME, PROCESS_INFO_STATUS, PROCESS_INFO_CWD, PROCESS_INFO_USERNAME, PROCESS_INFO_GIDS, \
-    PROCESS_INFO_UIDS, PROCESS_INFO_TERMINAL, TELEMETRY_PROCESS_CPU_AFFINITY, TELEMETRY_PROCESS_MEM_INFO, \
+    PROCESS_INFO_UIDS, PROCESS_INFO_TERMINAL, TELEMETRY_PROCESS_MEM_INFO, \
     TELEMETRY_PROCESS_MEM_PERCENT, REMOTE_COMMAND_MARKER, REMOTE_COMMAND_MARKER_NAME, FRAME_TYPE_MARKER
 from control import subscribe_to_command
 from logger import error
 from output import init_output_file, write_frame
 from telemetry.cpu import get_load_avg, get_cpu_times, get_cpu_times_per_cpu, get_cpu_percent, get_cpu_percent_per_cpu, \
-    get_cpu_times_percent, get_cpu_times_percent_per_cpu, get_proc_cpu_affinity
+    get_cpu_times_percent, get_cpu_times_percent_per_cpu
 from telemetry.disk import get_disk_usage, get_disk_io_counters, get_disk_io_counters_per_disk
 from telemetry.memory import get_mem_system, get_mem_swap, get_proc_mem_info, get_proc_mem_percent
 from telemetry.net import get_net_io_counters, get_net_io_counters_per_nic
@@ -46,7 +46,6 @@ __telemetry_getters = {
 __process_telemetry_getters = {
     TELEMETRY_CPU_TIMES: get_cpu_times,
     TELEMETRY_CPU_PERCENT: get_cpu_percent,
-    TELEMETRY_PROCESS_CPU_AFFINITY: get_proc_cpu_affinity,
 
     TELEMETRY_PROCESS_MEM_INFO: get_proc_mem_info,
     TELEMETRY_PROCESS_MEM_PERCENT: get_proc_mem_percent,

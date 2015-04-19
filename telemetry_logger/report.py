@@ -9,12 +9,15 @@ from consts import ARGUMENT_COMMAND_PARAMETER, TEMPLATE_DIRECTORY_NAME, TEMPLATE
     TELEMETRY_CPU_PERCENT, TELEMETRY_CPU_PERCENT_PER_CPU, TELEMETRY_CPU_TIMES_PERCENT, TELEMETRY_MEM_SYSTEM, \
     TELEMETRY_MEM_SWAP, TELEMETRY_FAMILY_MEM, TELEMETRY_NET_IO_COUNTERS, TELEMETRY_NET_IO_COUNTERS_PER_NIC, \
     TELEMETRY_FAMILY_NET, TELEMETRY_FAMILY_DISK, TELEMETRY_DISK_USAGE, TELEMETRY_DISK_IO_COUNTERS, \
-    TELEMETRY_DISK_IO_COUNTERS_PER_DISK, TELEMETRY_PROCESS_CPU_AFFINITY, TELEMETRY_PROCESS_MEM_INFO, \
-    TELEMETRY_PROCESS_MEM_PERCENT
+    TELEMETRY_DISK_IO_COUNTERS_PER_DISK, TELEMETRY_PROCESS_MEM_INFO, \
+    TELEMETRY_PROCESS_MEM_PERCENT, ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX
 from graph_drawers.disk_drawers import draw_disk_usage, draw_disk_io_counters, draw_disk_io_counters_per_disk
-from graph_drawers.mem_drawers import draw_mem_system, draw_mem_swap
+from graph_drawers.mem_drawers import draw_mem_system, draw_mem_swap, draw_proc_mem_info, draw_proc_mem_percent
 from graph_drawers.net_drawers import draw_net_io_counters, draw_net_io_counters_per_nic
-from localization import get_string, UNKNOWN_TELEMETRY_TYPE, SYSTEM_TELEMETRY_STRING
+from localization import get_string, UNKNOWN_TELEMETRY_TYPE, SYSTEM_TELEMETRY_STRING, PROCESS_INFO_STRING, \
+    TELEMETRY_STRING, PROCESSES_STRING, PROCESS_FILTER_PID_STRING, PROCESS_FILTER_PATH_STRING, \
+    PROCESS_FILTER_REGEX_STRING, PID_STRING, PPID_STRING, CMD_LINE_STRING, EXE_STRING, STATUS_STRING, USERNAME_STRING, \
+    UIDS_STRING, NAME_STRING, CWD_STRING, CREATE_TIME_STRING, TERMINAL_STRING, GIDS_STRING
 from graph_drawers.cpu_drawers import draw_cpu_loadavg, draw_cpu_times, draw_cpu_times_per_cpu, draw_cpu_percent, \
     draw_cpu_percent_per_cpu, draw_cpu_times_percent, draw_cpu_times_percent_per_cpu
 from utils import GraphIdCounter, dump_javascript
@@ -42,6 +45,13 @@ __GRAPH_DRAWERS = {
     TELEMETRY_NET_IO_COUNTERS_PER_NIC: draw_net_io_counters_per_nic,
 }
 
+__PROCESS_GRAPH_DRAWERS = {
+    TELEMETRY_CPU_PERCENT: draw_cpu_percent,
+    TELEMETRY_CPU_TIMES: draw_cpu_times,
+    TELEMETRY_PROCESS_MEM_INFO: draw_proc_mem_info,
+    TELEMETRY_PROCESS_MEM_PERCENT: draw_proc_mem_percent,
+}
+
 __TELEMETRY_FAMILIES = {
     TELEMETRY_CPU_LOAD_AVG: TELEMETRY_FAMILY_CPU,
     TELEMETRY_CPU_TIMES: TELEMETRY_FAMILY_CPU,
@@ -61,9 +71,8 @@ __TELEMETRY_FAMILIES = {
     TELEMETRY_NET_IO_COUNTERS: TELEMETRY_FAMILY_NET,
     TELEMETRY_NET_IO_COUNTERS_PER_NIC: TELEMETRY_FAMILY_NET,
 
-    TELEMETRY_PROCESS_CPU_AFFINITY: TELEMETRY_FAMILY_CPU,
-    TELEMETRY_PROCESS_MEM_INFO: TELEMETRY_FAMILY_CPU,
-    TELEMETRY_PROCESS_MEM_PERCENT: TELEMETRY_FAMILY_CPU,
+    TELEMETRY_PROCESS_MEM_INFO: TELEMETRY_FAMILY_MEM,
+    TELEMETRY_PROCESS_MEM_PERCENT: TELEMETRY_FAMILY_MEM,
 }
 
 
@@ -96,20 +105,20 @@ def __make_header_block(template_path):
     return result
 
 
-def __draw_graph(tel_type, values, blocks, settings, graph_id_counter):
+def __draw_graph(tel_type, values, blocks, settings, graph_id_counter, graph_drawers = __GRAPH_DRAWERS):
     if tel_type in __TELEMETRY_FAMILIES:
         family_id = get_string(__TELEMETRY_FAMILIES[tel_type])
         if family_id not in blocks:
             blocks[family_id] = dict()
         blocks = blocks[family_id]
 
-    if tel_type not in __GRAPH_DRAWERS:
+    if tel_type not in graph_drawers:
         blocks[get_string(tel_type)] = \
             '<div class="alert alert-danger" role="alert">{0}</div>'.format(get_string(UNKNOWN_TELEMETRY_TYPE))
         return ''
     else:
         marked_graph_id = graph_id_counter.mark_position()
-        java_script = __GRAPH_DRAWERS[tel_type](values, settings, graph_id_counter)
+        java_script = graph_drawers[tel_type](values, settings, graph_id_counter)
 
         tel_type_name = get_string(tel_type)
         blocks[tel_type_name] = ''
@@ -148,6 +157,66 @@ def __get_html_for_block(title, content,  graph_id_counter):
     return result
 
 
+def __get_process_filter_string(pattern):
+    if pattern[0] == ARGUMENT_PROCESS_PID:
+        return get_string(PROCESS_FILTER_PID_STRING).format(pattern[1])
+    elif pattern[0] == ARGUMENT_PROCESS_PATH:
+        return get_string(PROCESS_FILTER_PATH_STRING).format(pattern[1])
+    elif pattern[0] == ARGUMENT_PROCESS_REGEX:
+        return get_string(PROCESS_FILTER_REGEX_STRING).format(pattern[1].pattern)
+    else:
+        return str(pattern)
+
+
+def __merge_process_info(old_pi, new_pi):
+    pi = old_pi[0]
+
+    for v in pi:
+        if str(new_pi[v]) not in str(pi[v]):
+            pi[v] = str(pi[v]) + ', ' + str(new_pi[v])
+
+    result = (pi, old_pi[1])
+    return result
+
+
+def __get_html_for_process_info(pi):
+    return '''
+    <table class="table table-striped table-bordered"><tbody>
+        <tr><td>{pid_string}</td><td>{pid}</td><td>{ppid_string}</td><td>{ppid}</td></tr>
+        <tr><td>{cmd_line_string}</td><td>{cmd_line}</td><td>{name_string}</td><td>{name}</td></tr>
+        <tr><td>{exe_string}</td><td>{exe}</td><td>{cwd_string}</td><td>{cwd}</td></tr>
+        <tr><td>{status_string}</td><td>{status}</td><td>{create_time_string}</td><td>{create_time}</td></tr>
+        <tr><td>{username_string}</td><td>{username}</td><td>{terminal_string}</td><td>{terminal}</td></tr>
+        <tr><td>{uids_string}</td><td>{uids}</td><td>{gids_string}</td><td>{gids}</td></tr>
+    </tbody></table>
+    '''.format(**{
+        'pid_string': PID_STRING,
+        'ppid_string': PPID_STRING,
+        'cmd_line_string': CMD_LINE_STRING,
+        'exe_string': EXE_STRING,
+        'status_string': STATUS_STRING,
+        'username_string': USERNAME_STRING,
+        'uids_string': UIDS_STRING,
+        'name_string': NAME_STRING,
+        'cwd_string': CWD_STRING,
+        'create_time_string': CREATE_TIME_STRING,
+        'terminal_string': TERMINAL_STRING,
+        'gids_string': GIDS_STRING,
+        'pid': pi['pid'],
+        'ppid': pi['ppid'],
+        'cmd_line': pi['cmd_line'],
+        'name': pi['name'],
+        'exe': pi['exe'],
+        'cwd': pi['cwd'],
+        'status': pi['status'],
+        'create_time': pi['create_time'],
+        'username': pi['username'],
+        'terminal': pi['terminal'],
+        'uids': pi['uids'],
+        'gids': pi['gids'],
+    })
+
+
 def make_report(settings):
     frames = __read_all_frames(settings[ARGUMENT_COMMAND_PARAMETER])
 
@@ -159,11 +228,26 @@ def make_report(settings):
 
     telemetries = dict()    # key: TELEMETRY_TYPE, value: list of tuples (datetime, value)
     markers = list()        # list of tuples (datetime, string)
+    processes = dict()      # key: process filter, value: dict of key:pid, value:(process_info: dict, telemetries: dict)
     for frame in frames:
         if frame[1] == FRAME_TYPE_TELEMETRY:
             for tel_value in frame[2]:      # tel_value: tuple(type, value)
                 if tel_value[0] == TELEMETRY_PROCESSES:
-                    pass
+                    for process in tel_value[1]:
+                        filter_string = __get_process_filter_string(process[0])
+                        if filter_string not in processes:
+                            processes[filter_string] = dict()
+
+                        pid = process[1]['pid']
+                        if pid not in processes[filter_string]:
+                            processes[filter_string][pid] = (process[1], dict())
+                        else:
+                            processes[filter_string][pid] = __merge_process_info(processes[filter_string][pid],
+                                                                                 process[1])
+                        for p_tel_value in process[2]:
+                            if p_tel_value[0] not in processes[filter_string][pid][1]:
+                                processes[filter_string][pid][1][p_tel_value[0]] = list()
+                            processes[filter_string][pid][1][p_tel_value[0]].append((frame[0], p_tel_value[1]))
                 else:
                     if tel_value[0] not in telemetries:
                         telemetries[tel_value[0]] = list()
@@ -186,6 +270,24 @@ def make_report(settings):
         draw_script += __draw_graph(tel_type, telemetries[tel_type], blocks, settings, graph_id_counter)
 
     content = __get_html_for_block(get_string(SYSTEM_TELEMETRY_STRING), blocks, graph_id_counter)
+
+    processes_blocks = dict()
+    for process_filter in processes:
+        processes_blocks[process_filter] = dict()
+        pids = processes[process_filter]
+
+        for pid in pids:
+            pid_str = str(pid)
+            processes_blocks[process_filter][pid_str] = dict()
+            processes_blocks[process_filter][pid_str][get_string(PROCESS_INFO_STRING)] = \
+                __get_html_for_process_info(pids[pid][0])
+            processes_blocks[process_filter][pid_str][get_string(TELEMETRY_STRING)] = dict()
+            for tel_type in pids[pid][1]:
+                draw_script += __draw_graph(tel_type, pids[pid][1][tel_type],
+                                            processes_blocks[process_filter][pid_str][get_string(TELEMETRY_STRING)],
+                                            settings, graph_id_counter, __PROCESS_GRAPH_DRAWERS)
+    content += __get_html_for_block(get_string(PROCESSES_STRING), processes_blocks, graph_id_counter)
+
     template = template.replace(TEMPLATE_CONTENT_BLOCK, content)
     template = template.replace(TEMPLATE_END_BLOCK,
                                 '''<script type="text/javascript">

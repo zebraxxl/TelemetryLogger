@@ -18,3 +18,11 @@ def draw_mem_swap(values, settings, graph_id_counter):
                              ignore_sub_graphs=['total', 'percent'])
     return result + draw_line_graph(values, settings, graph_id_counter, override_names=PERCENTS_STRING,
                                     ignore_sub_graphs=['total', 'used', 'free', 'sin', 'sout'])
+
+
+def draw_proc_mem_info(values, settings, graph_id_counter):
+    return draw_line_graph(values, settings, graph_id_counter, units=SIZE_UNITS)
+
+
+def draw_proc_mem_percent(values, settings, graph_id_counter):
+    return draw_line_graph(values, settings, graph_id_counter, override_names=PERCENTS_STRING)
