@@ -8,6 +8,7 @@ __author__ = 'zebraxxl'
 
 class FileOutputModule(OutputModule):
     def __init__(self, settings):
+        OutputModule.__init__(self, settings)
         self.output_file = open(settings[ARGUMENT_OUTPUT], 'ab')
 
     def write_frame(self, frame):
