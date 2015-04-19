@@ -1,8 +1,8 @@
 import socket
 import cPickle
 import struct
-from consts import ARGUMENT_OUTPUT, PICKLE_PROTOCOL_VERSION
-from output import OutputModule
+from telemetry_logger.consts import ARGUMENT_OUTPUT, PICKLE_PROTOCOL_VERSION
+from telemetry_logger.output import OutputModule
 
 __author__ = 'zebraxxl'
 
