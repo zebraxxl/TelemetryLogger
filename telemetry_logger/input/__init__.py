@@ -1,4 +1,4 @@
-from telemetry_logger.consts import INPUT_MODULE_SYSTEM, ARGUMENT_INPUT_MODULE
+from telemetry_logger.consts import INPUT_MODULE_SYSTEM, ARGUMENT_INPUT_MODULE, INPUT_MODULE_NET
 
 __author__ = 'zebraxxl'
 
@@ -24,9 +24,11 @@ def init_input(settings):
     global input_module
 
     from telemetry_logger.input.system import SystemInputModule
+    from telemetry_logger.input.net import NetInputModule
 
     input_modules = {
         INPUT_MODULE_SYSTEM: SystemInputModule,
+        INPUT_MODULE_NET: NetInputModule,
     }
 
     input_module = input_modules[settings[ARGUMENT_INPUT_MODULE]](settings)

@@ -7,13 +7,14 @@ from consts import ARGUMENTS_DEFAULT, ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, 
     ALL_TELEMETRY, ARGUMENT_PROCESS_REGEX, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_PID, ARGUMENT_CONFIG_FILE, ARGUMENT_OUTPUT, \
     ARGUMENT_INTERVAL, ALL_COMMANDS, ARGUMENT_COMMAND, COMMAND_MARKER, ARGUMENT_COMMAND_PARAMETER, MAX_VALID_PORT, \
     COMMAND_START, COMMAND_REPORT, ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART, ARGUMENT_OUTPUT_MODULE, ALL_OUTPUT_MODULES, \
-    ARGUMENT_INPUT_MODULE
+    ARGUMENT_INPUT_MODULE, ALL_INPUT_MODULES, ARGUMENT_INPUT_ADDRESS, ARGUMENT_INPUT_PORT
 from utils import try_to_int
 
 __author__ = 'zebraxxl'
 
 __only_write_arguments = frozenset({ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, ARGUMENT_CONTROL_PORT, ARGUMENT_OUTPUT,
-                                    ARGUMENT_INTERVAL, ARGUMENT_OUTPUT_MODULE, ARGUMENT_INPUT_MODULE})
+                                    ARGUMENT_INTERVAL, ARGUMENT_OUTPUT_MODULE, ARGUMENT_INPUT_MODULE,
+                                    ARGUMENT_INPUT_ADDRESS, ARGUMENT_INPUT_PORT})
 __process_arguments = frozenset({ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX})
 __command_need_output = frozenset({COMMAND_START, COMMAND_REPORT})
 __command_need_parameter = frozenset({COMMAND_MARKER, COMMAND_REPORT})
@@ -203,6 +204,7 @@ def process_settings():
     if __show_help(result):
         supported_telemetry_types = __get_supported_line(list(ALL_TELEMETRY))
         supported_output_modules = __get_supported_line(list(ALL_OUTPUT_MODULES))
+        supported_input_modules = __get_supported_line(list(ALL_INPUT_MODULES))
 
         print('Usage: {program_name} COMMAND [PARAMETER] [SETTING] ...\n'
               'Valid commands with parameters:\n'
@@ -218,6 +220,8 @@ def process_settings():
               '    --output OUTPUT        - output data to OUTPUT.\n'
               '                             OUTPUT value depends of output module\n'
               '    --input_module INPUT   - set input module to MODULE\n'
+              '    --input_address        - set input address for listen (for net input module)\n'
+              '    --input_port           - set input port for listen (for net input module)\n'
               '    --pid_file FILE        - save pid of running telemetry logger in FILE\n'
               '    --control_addr ADDR    - listen for or send control commands on ADDR address\n'
               '    --control_port PORT    - listen for or send control commands on PORT port\n'
@@ -235,10 +239,14 @@ def process_settings():
               '    {supported_telemetry_types}\n'
               'Supported output modules:\n'
               '    {supported_output_modules}\n'
+              'Supported input modules:\n'
+              '    {supported_input_modules}\n'
               'Default values for settings:\n'
               '    interval         {default_interval} sec\n'
               '    output_module    {default_output_module}\n'
               '    input_module     {default_input_module}\n'
+              '    input_address    {default_input_address}\n'
+              '    input_port       {default_input_port}\n'
               '    pid_file         {default_pid_file}\n'
               '    control_addr     {default_control_addr}\n'
               '    control_port     {default_control_port}\n'
@@ -249,9 +257,12 @@ def process_settings():
                       telemetry_types_divide=TELEMETRY_TYPES_DELIMITER,
                       supported_telemetry_types=supported_telemetry_types,
                       supported_output_modules=supported_output_modules,
+                      supported_input_modules=supported_input_modules,
                       default_interval=ARGUMENTS_DEFAULT[ARGUMENT_INTERVAL],
                       default_output_module=ARGUMENTS_DEFAULT[ARGUMENT_OUTPUT_MODULE],
                       default_input_module=ARGUMENTS_DEFAULT[ARGUMENT_INPUT_MODULE],
+                      default_input_address=ARGUMENTS_DEFAULT[ARGUMENT_INPUT_ADDRESS],
+                      default_input_port=ARGUMENTS_DEFAULT[ARGUMENT_INPUT_PORT],
                       default_pid_file=ARGUMENTS_DEFAULT[ARGUMENT_PID_FILE],
                       default_control_addr=ARGUMENTS_DEFAULT[ARGUMENT_CONTROL_ADDR],
                       default_control_port=ARGUMENTS_DEFAULT[ARGUMENT_CONTROL_PORT],
