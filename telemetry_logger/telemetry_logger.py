@@ -14,7 +14,7 @@ from consts import ARGUMENT_OUTPUT, TELEMETRY_CPU_LOAD_AVG, ARGUMENT_TELEMETRY_T
     TELEMETRY_PROCESS_MEM_PERCENT, REMOTE_COMMAND_MARKER, REMOTE_COMMAND_MARKER_NAME, FRAME_TYPE_MARKER
 from control import subscribe_to_command
 from logger import error
-from output import init_output_file, write_frame
+from output import init_output, write_frame
 from telemetry.cpu import get_load_avg, get_cpu_times, get_cpu_times_per_cpu, get_cpu_percent, get_cpu_percent_per_cpu, \
     get_cpu_times_percent, get_cpu_times_percent_per_cpu
 from telemetry.disk import get_disk_usage, get_disk_io_counters, get_disk_io_counters_per_disk
@@ -122,9 +122,9 @@ def __set_marker(data):
 
 def run_logger(settings):
     try:
-        init_output_file(settings[ARGUMENT_OUTPUT])
+        init_output(settings)
     except Exception as e:
-        error('Error while opening output file ({0})', e)
+        error('Error while opening output ({0})', e)
 
     subscribe_to_command(REMOTE_COMMAND_MARKER, __set_marker)
 
