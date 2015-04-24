@@ -7,7 +7,7 @@ from consts import ARGUMENTS_DEFAULT, ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, 
     ALL_TELEMETRY, ARGUMENT_PROCESS_REGEX, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_PID, ARGUMENT_CONFIG_FILE, ARGUMENT_OUTPUT, \
     ARGUMENT_INTERVAL, ALL_COMMANDS, ARGUMENT_COMMAND, COMMAND_MARKER, ARGUMENT_COMMAND_PARAMETER, MAX_VALID_PORT, \
     COMMAND_START, COMMAND_REPORT, ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART, ARGUMENT_OUTPUT_MODULE, ALL_OUTPUT_MODULES, \
-    ARGUMENT_INPUT_MODULE, ALL_INPUT_MODULES, ARGUMENT_INPUT_ADDRESS, ARGUMENT_INPUT_PORT
+    ARGUMENT_INPUT_MODULE, ALL_INPUT_MODULES, ARGUMENT_INPUT_ADDRESS, ARGUMENT_INPUT_PORT, ARGUMENT_PROCESS_PID_FILE
 from utils import try_to_int
 
 __author__ = 'zebraxxl'
@@ -15,7 +15,8 @@ __author__ = 'zebraxxl'
 __only_write_arguments = frozenset({ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, ARGUMENT_CONTROL_PORT, ARGUMENT_OUTPUT,
                                     ARGUMENT_INTERVAL, ARGUMENT_OUTPUT_MODULE, ARGUMENT_INPUT_MODULE,
                                     ARGUMENT_INPUT_ADDRESS, ARGUMENT_INPUT_PORT})
-__process_arguments = frozenset({ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX})
+__process_arguments = frozenset({ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX,
+                                 ARGUMENT_PROCESS_PID_FILE})
 __command_need_output = frozenset({COMMAND_START, COMMAND_REPORT})
 __command_need_parameter = frozenset({COMMAND_MARKER, COMMAND_REPORT})
 __arguments_flags = frozenset({ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART})
@@ -230,6 +231,8 @@ def process_settings():
               '    --process_pid PID      - log telemetry for process with pid PID\n'
               '    --process_path PATH    - log telemetry for processes whose executable file\n'
               '                             is located in PATH\n'
+              '    --process_pid_file FILE - log telemetry for process specified \n'
+              '                             in pid file FILE\n'
               '    --process_regex REGEX  - log telemetry for processes whose command line\n'
               '                             matches the regular expression REGEX\n'
               '    --config_file FILE     - load settings from file FILE\n'

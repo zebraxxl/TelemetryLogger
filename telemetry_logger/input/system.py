@@ -9,7 +9,8 @@ from telemetry_logger.consts import TELEMETRY_CPU_LOAD_AVG, TELEMETRY_CPU_TIMES_
     ARGUMENT_TELEMETRY_TYPES, ARGUMENT_PROCESSES, ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX, \
     PROCESS_INFO_PID, PROCESS_INFO_PPID, PROCESS_INFO_NAME, PROCESS_INFO_EXE, PROCESS_INFO_CMDLINE, \
     PROCESS_INFO_CREATE_TIME, PROCESS_INFO_STATUS, PROCESS_INFO_CWD, PROCESS_INFO_USERNAME, PROCESS_INFO_UIDS, \
-    PROCESS_INFO_GIDS, PROCESS_INFO_TERMINAL, TELEMETRY_PROCESSES, FRAME_TYPE_TELEMETRY, ARGUMENT_INTERVAL
+    PROCESS_INFO_GIDS, PROCESS_INFO_TERMINAL, TELEMETRY_PROCESSES, FRAME_TYPE_TELEMETRY, ARGUMENT_INTERVAL, \
+    ARGUMENT_PROCESS_PID_FILE
 from telemetry_logger.telemetry.cpu import get_load_avg, get_cpu_times, get_cpu_times_per_cpu, get_cpu_percent, get_cpu_percent_per_cpu, \
     get_cpu_times_percent, get_cpu_times_percent_per_cpu
 from telemetry_logger.telemetry.disk import get_disk_usage, get_disk_io_counters_per_disk
@@ -50,12 +51,12 @@ class SystemInputModule(InputModule):
         TELEMETRY_PROCESS_MEM_PERCENT: get_proc_mem_percent,
     }
 
-    def __get_process_argument(self, process):
+    def __get_process_argument(self, process, pids):
+        if process.pid in pids:
+            return pids[process.pid]
+
         for arg in self.settings[ARGUMENT_PROCESSES]:
-            if arg[0] == ARGUMENT_PROCESS_PID:
-                if process.pid == arg[1]:
-                    return arg
-            elif arg[0] == ARGUMENT_PROCESS_PATH:
+            if arg[0] == ARGUMENT_PROCESS_PATH:
                 if process.exe() == arg[1]:
                     return arg
             elif arg[0] == ARGUMENT_PROCESS_REGEX:
@@ -93,9 +94,21 @@ class SystemInputModule(InputModule):
                 v = self.__telemetry_getters[t]()
                 telemetry_data.append((t, v))
 
+        pids = dict()
+        for arg in self.settings[ARGUMENT_PROCESSES]:
+            if arg == ARGUMENT_PROCESS_PID:
+                pids[arg[1]] = arg
+            elif arg == ARGUMENT_PROCESS_PID_FILE:
+                try:
+                    with open(arg[1], 'r') as f:
+                        pid = int(f.read())
+                    pids[pid] = arg
+                except IOError:
+                    pass
+
         processes = list()
         for p in psutil.process_iter():
-            arg = self.__get_process_argument(p)
+            arg = self.__get_process_argument(p, pids)
             if arg is None:
                 continue
 

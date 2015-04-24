@@ -104,6 +104,7 @@ ARGUMENT_INPUT_PORT = 'input_port'
 ARGUMENT_PROCESS_PID = 'process_pid'
 ARGUMENT_PROCESS_PATH = 'process_path'
 ARGUMENT_PROCESS_REGEX = 'process_regex'
+ARGUMENT_PROCESS_PID_FILE = 'process_pid_file'
 
 ARGUMENT_COMMAND_PARAMETER = 'command_parameter'
 
