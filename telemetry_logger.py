@@ -11,7 +11,7 @@ from telemetry_logger.arguments import process_settings
 
 __author__ = 'zebraxxl'
 
-__daemon_commands = frozenset({COMMAND_START, COMMAND_STOP, COMMAND_RESTART})
+__daemon_commands = frozenset([COMMAND_START, COMMAND_STOP, COMMAND_RESTART])
 
 
 def send_marker_command(s, name):

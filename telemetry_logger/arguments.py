@@ -12,14 +12,14 @@ from utils import try_to_int
 
 __author__ = 'zebraxxl'
 
-__only_write_arguments = frozenset({ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, ARGUMENT_CONTROL_PORT, ARGUMENT_OUTPUT,
+__only_write_arguments = frozenset([ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, ARGUMENT_CONTROL_PORT, ARGUMENT_OUTPUT,
                                     ARGUMENT_INTERVAL, ARGUMENT_OUTPUT_MODULE, ARGUMENT_INPUT_MODULE,
-                                    ARGUMENT_INPUT_ADDRESS, ARGUMENT_INPUT_PORT})
-__process_arguments = frozenset({ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX,
-                                 ARGUMENT_PROCESS_PID_FILE})
-__command_need_output = frozenset({COMMAND_START, COMMAND_REPORT})
-__command_need_parameter = frozenset({COMMAND_MARKER, COMMAND_REPORT})
-__arguments_flags = frozenset({ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART})
+                                    ARGUMENT_INPUT_ADDRESS, ARGUMENT_INPUT_PORT])
+__process_arguments = frozenset([ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX,
+                                 ARGUMENT_PROCESS_PID_FILE])
+__command_need_output = frozenset([COMMAND_START, COMMAND_REPORT])
+__command_need_parameter = frozenset([COMMAND_MARKER, COMMAND_REPORT])
+__arguments_flags = frozenset([ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART])
 
 __cf_process_type = 'type'
 __cf_process_value = 'value'
