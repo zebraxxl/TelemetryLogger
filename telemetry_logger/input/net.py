@@ -9,6 +9,26 @@ __author__ = 'zebraxxl'
 
 
 class NetInputModule(InputModule):
+    class NetInputReadThread(Thread):
+        def __init__(self, module, sock):
+            Thread.__init__(self)
+            self.setDaemon(True)
+            self.module = module
+            self.sock = sock
+
+        def run(self):
+            try:
+                while True:
+                    data_len_raw = self.sock.recv(4)
+                    data_len = struct.unpack('<I', data_len_raw)[0]
+
+                    data_raw = self.sock.recv(data_len)
+                    data = cPickle.loads(data_raw)
+                    self.module._invoke_on_frame(data)
+            except Exception as e:
+                pass
+
+
     class NetInputThread(Thread):
         def __init__(self, module):
             Thread.__init__(self)
@@ -25,15 +45,7 @@ class NetInputModule(InputModule):
             while True:
                 try:
                     connection, address = self.sock.accept()
-
-                    data_len_raw = connection.recv(4)
-                    data_len = struct.unpack('<I', data_len_raw)[0]
-
-                    data_raw = connection.recv(data_len)
-                    connection.close()
-
-                    data = cPickle.loads(data_raw)
-                    self.module._invoke_on_frame(data)
+                    NetInputModule.NetInputReadThread(self.module, connection).start()
                 except Exception as e:
                     pass
 
