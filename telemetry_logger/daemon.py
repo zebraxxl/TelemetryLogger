@@ -1,5 +1,6 @@
 import os
 import signal
+from traceback import format_exc
 from consts import ARGUMENT_COMMAND, COMMAND_STOP, COMMAND_RESTART, ARGUMENT_PID_FILE, COMMAND_START, \
     ARGUMENT_CONTROL_ADDR, ARGUMENT_CONTROL_PORT, ARGUMENT_DEBUG
 import control
@@ -74,6 +75,7 @@ def __start(settings):
         __daemon_main(settings)
     except Exception as e:
         error('Unhandled error while running daemon ({0})', e)
+        error('{0}', format_exc())
 
     info('Daemon stopped')
 
