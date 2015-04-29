@@ -127,6 +127,21 @@ def __draw_graph(tel_type, values, blocks, settings, graph_id_counter, graph_dra
         for graph_id in graph_id_counter.get_generated_ids(marked_graph_id):
             blocks[tel_type_name] += '<div id="{0}"></div>'.format(graph_id)
 
+        draw_func_name = graph_id + '_draw_func'
+        java_script = '''
+        function {draw_func_name}(){{
+            {draw_code}
+        }}
+
+        $("#{graph_id}").parent().parent().on("shown.bs.collapse", function() {{
+            {draw_func_name}();
+        }});
+        '''.format(
+            draw_func_name=draw_func_name,
+            draw_code=java_script,
+            graph_id=graph_id
+        )
+
         return java_script
 
 
