@@ -1,7 +1,7 @@
 import os
 import signal
 from consts import ARGUMENT_COMMAND, COMMAND_STOP, COMMAND_RESTART, ARGUMENT_PID_FILE, COMMAND_START, \
-    ARGUMENT_CONTROL_ADDR, ARGUMENT_CONTROL_PORT
+    ARGUMENT_CONTROL_ADDR, ARGUMENT_CONTROL_PORT, ARGUMENT_DEBUG
 import control
 from logger import info, error
 from telemetry_logger import run_logger
@@ -54,9 +54,10 @@ def __start(settings):
         error('Pid file {0} exist. Can\'t start new instance', pid_file)
         return
 
-    if os.fork() != 0:
-        info('Daemon started')
-        return
+    if not settings[ARGUMENT_DEBUG]:
+        if os.fork() != 0:
+            info('Daemon started')
+            return
 
     pid = os.getpid()
 
