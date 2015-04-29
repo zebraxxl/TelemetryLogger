@@ -96,13 +96,13 @@ class SystemInputModule(InputModule):
 
         pids = dict()
         for arg in self.settings[ARGUMENT_PROCESSES]:
-            if arg == ARGUMENT_PROCESS_PID:
+            if arg[0] == ARGUMENT_PROCESS_PID:
                 pids[arg[1]] = arg
-            elif arg == ARGUMENT_PROCESS_PID_FILE:
+            elif arg[0] == ARGUMENT_PROCESS_PID_FILE:
                 try:
                     with open(arg[1], 'r') as f:
-                        pid = int(f.read())
-                    pids[pid] = arg
+                        pid = int(f.read().strip(' \t\r\n\0'))
+                    pids[pid] = arg[0]
                 except IOError:
                     pass
 
