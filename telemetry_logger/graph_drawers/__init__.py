@@ -1,6 +1,7 @@
 from copy import deepcopy
 from telemetry_logger.localization import get_string, UNITS_STRING
-from telemetry_logger.consts import ARGUMENT_SPLIT_GRAPHS, JS_VAR_MARKERS_LINES, ARGUMENT_SUB_CHART
+from telemetry_logger.consts import ARGUMENT_SPLIT_GRAPHS, JS_VAR_MARKERS_LINES, ARGUMENT_SUB_CHART, \
+    ARGUMENT_SHOW_GRAPH_POINTS
 from telemetry_logger.utils import JavaScriptInJsonExpression, dump_javascript
 
 __author__ = 'zebraxxl'
@@ -26,7 +27,10 @@ GRAPH_STANDARD_SETTINGS = {
             'lines': JavaScriptInJsonExpression(JS_VAR_MARKERS_LINES),
         }
     },
-    'zoom': {'enabled': True}
+    'zoom': {'enabled': True},
+    'point': {
+        'show': False,
+    },
 }
 
 TIME_UNITS = {
@@ -71,6 +75,9 @@ def get_new_standard_graph_settings(settings):
     if settings[ARGUMENT_SUB_CHART]:
         result['size']['height'] = 300
         result['subchart'] = {'show': True}
+
+    if settings[ARGUMENT_SHOW_GRAPH_POINTS]:
+        result['point']['show'] = True
 
     return result
 

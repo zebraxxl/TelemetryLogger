@@ -8,7 +8,7 @@ from consts import ARGUMENTS_DEFAULT, ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, 
     ARGUMENT_INTERVAL, ALL_COMMANDS, ARGUMENT_COMMAND, COMMAND_MARKER, ARGUMENT_COMMAND_PARAMETER, MAX_VALID_PORT, \
     COMMAND_START, COMMAND_REPORT, ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART, ARGUMENT_OUTPUT_MODULE, ALL_OUTPUT_MODULES, \
     ARGUMENT_INPUT_MODULE, ALL_INPUT_MODULES, ARGUMENT_INPUT_ADDRESS, ARGUMENT_INPUT_PORT, ARGUMENT_PROCESS_PID_FILE, \
-    ARGUMENT_DEBUG
+    ARGUMENT_DEBUG, ARGUMENT_SHOW_GRAPH_POINTS
 from utils import try_to_int
 
 __author__ = 'zebraxxl'
@@ -20,7 +20,7 @@ __process_arguments = frozenset([ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, AR
                                  ARGUMENT_PROCESS_PID_FILE])
 __command_need_output = frozenset([COMMAND_START, COMMAND_REPORT])
 __command_need_parameter = frozenset([COMMAND_MARKER, COMMAND_REPORT])
-__arguments_flags = frozenset([ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART, ARGUMENT_DEBUG])
+__arguments_flags = frozenset([ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART, ARGUMENT_DEBUG, ARGUMENT_SHOW_GRAPH_POINTS])
 
 __cf_process_type = 'type'
 __cf_process_value = 'value'
@@ -239,6 +239,7 @@ def process_settings():
               '    --config_file FILE     - load settings from file FILE\n'
               '    --split_graphs         - split multiple graphs in report\n'
               '    --sub_chart            - show sub chart\n'
+              '    --show_graph_points    - show points on graph\n'
               'Supported telemetry types:\n'
               '    {supported_telemetry_types}\n'
               'Supported output modules:\n'
@@ -256,7 +257,8 @@ def process_settings():
               '    control_port     {default_control_port}\n'
               '    telemetry_type   all supported\n'
               '    split_graphs     {default_split_graphs}\n'
-              '    sub_char         {default_sub_chart}'
+              '    sub_char         {default_sub_chart}\n'
+              '    show_graph_points {default_show_graph_points}\n'
               .format(program_name=sys.argv[0],
                       telemetry_types_divide=TELEMETRY_TYPES_DELIMITER,
                       supported_telemetry_types=supported_telemetry_types,
@@ -271,7 +273,8 @@ def process_settings():
                       default_control_addr=ARGUMENTS_DEFAULT[ARGUMENT_CONTROL_ADDR],
                       default_control_port=ARGUMENTS_DEFAULT[ARGUMENT_CONTROL_PORT],
                       default_split_graphs=ARGUMENTS_DEFAULT[ARGUMENT_SPLIT_GRAPHS],
-                      default_sub_chart=ARGUMENTS_DEFAULT[ARGUMENT_SUB_CHART]))
+                      default_sub_chart=ARGUMENTS_DEFAULT[ARGUMENT_SUB_CHART],
+                      default_show_graph_points=ARGUMENTS_DEFAULT[ARGUMENT_SHOW_GRAPH_POINTS]))
         return None
 
     __validate_settings(result)
