@@ -1,7 +1,9 @@
+import logging
 from threading import Lock
 from telemetry_logger.consts import OUTPUT_MODULE_FILE, ARGUMENT_OUTPUT_MODULE, OUTPUT_MODULE_NET
 
 __author__ = 'zebraxxl'
+logger = logging.getLogger('output')
 
 
 class OutputModule:
@@ -33,6 +35,9 @@ def write_frame(frame):
     global output_module
 
     write_lock.acquire()
+
+    logger.trace('Frame writing')
+
     try:
         output_module.write_frame(frame)
     finally:

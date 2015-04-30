@@ -1,12 +1,14 @@
+import logging
 import time
 from datetime import datetime
 from consts import REMOTE_COMMAND_MARKER, REMOTE_COMMAND_MARKER_NAME, FRAME_TYPE_MARKER
 from control import subscribe_to_command
-from logger import error
 from output import init_output, write_frame
 from input import init_input, subscribe_to_frame, start
 
 __author__ = 'zebraxxl'
+
+logger = logging.getLogger('telemetry_logger')
 
 
 def __set_marker(data):
@@ -19,7 +21,7 @@ def run_logger(settings):
     try:
         init_output(settings)
     except Exception as e:
-        error('Error while opening output ({0})', e)
+        logger.error('Error while opening output (%s)', e)
 
     subscribe_to_command(REMOTE_COMMAND_MARKER, __set_marker)
 

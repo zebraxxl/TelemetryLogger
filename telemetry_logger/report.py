@@ -107,7 +107,7 @@ def __make_header_block(template_path):
     return result
 
 
-def __draw_graph(tel_type, values, blocks, settings, graph_id_counter, graph_drawers = __GRAPH_DRAWERS):
+def __draw_graph(tel_type, values, blocks, settings, graph_id_counter, graph_drawers=__GRAPH_DRAWERS):
     if tel_type in __TELEMETRY_FAMILIES:
         family_id = get_string(__TELEMETRY_FAMILIES[tel_type])
         if family_id not in blocks:

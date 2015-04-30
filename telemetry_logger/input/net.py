@@ -1,3 +1,4 @@
+import logging
 from socket import socket
 import struct
 from threading import Thread
@@ -6,6 +7,7 @@ from telemetry_logger.consts import ARGUMENT_INPUT_ADDRESS, ARGUMENT_INPUT_PORT
 from telemetry_logger.input import InputModule
 
 __author__ = 'zebraxxl'
+logger = logging.getLogger('input:net')
 
 
 class NetInputModule(InputModule):
@@ -24,10 +26,12 @@ class NetInputModule(InputModule):
 
                     data_raw = self.sock.recv(data_len)
                     data = cPickle.loads(data_raw)
+
+                    logger.trace('New frame received')
+
                     self.module._invoke_on_frame(data)
             except Exception as e:
                 pass
-
 
     class NetInputThread(Thread):
         def __init__(self, module):
@@ -45,6 +49,9 @@ class NetInputModule(InputModule):
             while True:
                 try:
                     connection, address = self.sock.accept()
+
+                    logger.info('New connection from %s', address)
+
                     NetInputModule.NetInputReadThread(self.module, connection).start()
                 except Exception as e:
                     pass

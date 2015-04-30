@@ -1,12 +1,16 @@
+import logging
 from telemetry_logger.consts import INPUT_MODULE_SYSTEM, ARGUMENT_INPUT_MODULE, INPUT_MODULE_NET
 
 __author__ = 'zebraxxl'
+logger = logging.getLogger('input')
 
 
 class InputModule:
     __on_frame = list()
 
     def _invoke_on_frame(self, frame):
+        logger.trace('Invoking on frame handlers')
+
         for handler in self.__on_frame:
             handler(frame)
 

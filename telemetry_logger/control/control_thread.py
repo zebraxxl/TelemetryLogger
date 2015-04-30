@@ -1,15 +1,20 @@
 import BaseHTTPServer
 import SocketServer
 import json
+import logging
 from threading import Thread, current_thread
 import urllib
 from urlparse import urlparse
 
 __author__ = 'zebraxxl'
 
+logger = logging.getLogger('control')
+
 
 class ControlHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def process_request(self, arguments):
+        logger.debug('New request to %s with args %s from %s', self.path, arguments, self.client_address[0])
+
         try:
             url = urlparse(self.path)
             queries = url.query.split('&')
@@ -37,6 +42,9 @@ class ControlHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.process_request(data)
         except Exception as e:
             self.send_response(500, '{0}'.format(e))
+
+    def log_message(self, format, *args):
+        logger.info('%s - - [%s] %s', self.client_address[0], self.log_date_time_string(), format % args)
 
 
 class ControlThread(Thread):

@@ -1,12 +1,13 @@
 import platform
 import sys
-from logger import error
+import logging
 
 __author__ = 'zebraxxl'
 
 PICKLE_PROTOCOL_VERSION = 2
 
 PLATFORM_DEFAULT_PID_FILE = 'default_pid_file'
+PLATFORM_DEFAULT_LOG_DIRECTORY = 'default_log_directory'
 
 
 def get_platform_data():
@@ -15,9 +16,10 @@ def get_platform_data():
     if system == 'Linux':
         return {
             PLATFORM_DEFAULT_PID_FILE: '/tmp/telemetry_logger.pid',
+            PLATFORM_DEFAULT_LOG_DIRECTORY: '/var/log/TelemetryLogger/',
         }
     else:
-        error('"{0}" system not supported'.format(system))
+        logging.error('"{0}" system not supported'.format(system))
         sys.exit(1)
 
 
@@ -48,7 +50,6 @@ TELEMETRY_NET_IO_COUNTERS_PER_NIC = 'NET_IO_COUNTERS_PER_NIC'
 
 TELEMETRY_PROCESS_MEM_INFO = 'PROC_MEM_INFO'
 TELEMETRY_PROCESS_MEM_PERCENT = 'PROC_MEM_PERCENT'
-
 
 ALL_TELEMETRY = frozenset([
     TELEMETRY_CPU_LOAD_AVG, TELEMETRY_CPU_TIMES, TELEMETRY_CPU_TIMES_PER_CPU, TELEMETRY_CPU_PERCENT,
@@ -101,6 +102,7 @@ ARGUMENT_INPUT_MODULE = 'input_module'
 ARGUMENT_INPUT_ADDRESS = 'input_address'
 ARGUMENT_INPUT_PORT = 'input_port'
 ARGUMENT_SHOW_GRAPH_POINTS = 'show_graph_points'
+ARGUMENT_RUNNING_LOG_CONFIG = 'running_log_config'
 ARGUMENT_DEBUG = 'debug'
 
 ARGUMENT_PROCESS_PID = 'process_pid'
@@ -129,6 +131,7 @@ ARGUMENTS_DEFAULT = {
     ARGUMENT_INPUT_PORT: 23052,
     ARGUMENT_DEBUG: False,
     ARGUMENT_SHOW_GRAPH_POINTS: False,
+    ARGUMENT_RUNNING_LOG_CONFIG: None,
 }
 
 COMMAND_START = 'start'

@@ -2,10 +2,12 @@
 import sys
 import urllib
 import urllib2
+from telemetry_logger.logger import init_logger
 from telemetry_logger.report import make_report
 from telemetry_logger.consts import COMMAND_START, COMMAND_RESTART, COMMAND_STOP, ARGUMENT_COMMAND, COMMAND_MARKER, \
     ARGUMENT_COMMAND_PARAMETER, ARGUMENT_CONTROL_ADDR, ARGUMENT_CONTROL_PORT, REMOTE_COMMAND_MARKER, \
-    REMOTE_COMMAND_MARKER_NAME, COMMAND_REPORT
+    REMOTE_COMMAND_MARKER_NAME, COMMAND_REPORT, ARGUMENT_RUNNING_LOG_CONFIG, PLATFORM_DATA, \
+    PLATFORM_DEFAULT_LOG_DIRECTORY
 from telemetry_logger import daemon
 from telemetry_logger.arguments import process_settings
 
@@ -29,6 +31,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if settings[ARGUMENT_COMMAND] in __daemon_commands:
+        init_logger(PLATFORM_DATA[PLATFORM_DEFAULT_LOG_DIRECTORY], settings[ARGUMENT_RUNNING_LOG_CONFIG])
         daemon.run(settings)
     elif settings[ARGUMENT_COMMAND] == COMMAND_MARKER:
         send_marker_command(settings, settings[ARGUMENT_COMMAND_PARAMETER])

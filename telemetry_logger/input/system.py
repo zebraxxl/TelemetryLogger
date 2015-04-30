@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 import re
 from threading import Timer
 import psutil
@@ -23,6 +24,8 @@ __author__ = 'zebraxxl'
 
 
 class SystemInputModule(InputModule):
+    logger = logging.getLogger('input:sys')
+
     __telemetry_getters = {
         TELEMETRY_CPU_LOAD_AVG: get_load_avg,
         TELEMETRY_CPU_TIMES: get_cpu_times,
@@ -125,6 +128,7 @@ class SystemInputModule(InputModule):
             telemetry_data.append((TELEMETRY_PROCESSES, processes))
 
         result = (datetime.now(), FRAME_TYPE_TELEMETRY, telemetry_data)
+        self.logger.trace('New frame generated')
         self.__start_timer()
         self._invoke_on_frame(result)
 

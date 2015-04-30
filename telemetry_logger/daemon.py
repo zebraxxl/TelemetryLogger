@@ -1,36 +1,42 @@
+import logging
 import os
 import signal
 from traceback import format_exc
 from consts import ARGUMENT_COMMAND, COMMAND_STOP, COMMAND_RESTART, ARGUMENT_PID_FILE, COMMAND_START, \
     ARGUMENT_CONTROL_ADDR, ARGUMENT_CONTROL_PORT, ARGUMENT_DEBUG
 import control
-from logger import info, error
 from telemetry_logger import run_logger
 from utils import try_to_int
 
 __author__ = 'zebraxxl'
 pid_file = ''
 
+logger = logging.getLogger('daemon')
+
 
 def __daemon_main(settings):
+    logging.info('')
+    logging.info('================================= NEW SESSION =================================')
+    logging.info('')
+
     control.start(settings[ARGUMENT_CONTROL_ADDR], settings[ARGUMENT_CONTROL_PORT])
     run_logger(settings)
 
 
 def __stop(settings):
     global pid_file
-    info('Stopping the daemon...')
+    logger.info('Stopping the daemon...')
 
     pid_file = settings[ARGUMENT_PID_FILE]
     if not os.path.exists(pid_file) or not os.path.isfile(pid_file):
-        error('Pid file {0} not exist', pid_file)
+        logger.error('Pid file %s not exist', pid_file)
         return
 
     try:
         with open(pid_file, 'r') as f:
             pid = f.read()
     except Exception as e:
-        error('Error while reading pid file {0} ({1})', pid_file, e)
+        logger.error('Error while reading pid file %s (%s)', pid_file, e)
         return
     finally:
         os.unlink(pid_file)
@@ -38,26 +44,26 @@ def __stop(settings):
     pid = try_to_int(pid)
 
     if pid is None:
-        error('Pid file was invalid')
+        logger.error('Pid file was invalid')
         return
 
     # TODO: Check for pid exist
     os.kill(pid, signal.SIGKILL)
-    info('Daemon stopped')
+    logger.info('Daemon stopped')
 
 
 def __start(settings):
     global pid_file
-    info('Starting the daemon...')
+    logger.info('Starting the daemon...')
 
     pid_file = settings[ARGUMENT_PID_FILE]
     if os.path.exists(pid_file) and os.path.isfile(pid_file):
-        error('Pid file {0} exist. Can\'t start new instance', pid_file)
+        logger.error('Pid file %s exist. Can\'t start new instance', pid_file)
         return
 
     if not settings[ARGUMENT_DEBUG]:
         if os.fork() != 0:
-            info('Daemon started')
+            logger.info('Daemon started')
             return
 
     pid = os.getpid()
@@ -68,16 +74,16 @@ def __start(settings):
     except Exception as e:
         if os.path.exists(pid_file) and os.path.isfile(pid_file):
             os.remove(pid_file)
-        error('Error while writing pid file {0} ({1}). Daemon was stopped', pid_file, e)
+        logger.error('Error while writing pid file %s (%s). Daemon was stopped', pid_file, e)
         return
 
     try:
         __daemon_main(settings)
     except Exception as e:
-        error('Unhandled error while running daemon ({0})', e)
-        error('{0}', format_exc())
+        logger.error('Unhandled error while running daemon (%s)', e)
+        logger.error('', format_exc())
 
-    info('Daemon stopped')
+    logger.info('Daemon stopped')
 
 
 def run(settings):
