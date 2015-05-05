@@ -105,7 +105,7 @@ class SystemInputModule(InputModule):
                 try:
                     with open(arg[1], 'r') as f:
                         pid = int(f.read().strip(' \t\r\n\0'))
-                    pids[pid] = arg[0]
+                    pids[pid] = arg
                 except IOError:
                     pass
 
