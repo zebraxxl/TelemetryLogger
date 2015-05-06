@@ -7,9 +7,10 @@ from telemetry_logger.report import make_report
 from telemetry_logger.consts import COMMAND_START, COMMAND_RESTART, COMMAND_STOP, ARGUMENT_COMMAND, COMMAND_MARKER, \
     ARGUMENT_COMMAND_PARAMETER, ARGUMENT_CONTROL_ADDR, ARGUMENT_CONTROL_PORT, REMOTE_COMMAND_MARKER, \
     REMOTE_COMMAND_MARKER_NAME, COMMAND_REPORT, ARGUMENT_RUNNING_LOG_CONFIG, PLATFORM_DATA, \
-    PLATFORM_DEFAULT_LOG_DIRECTORY
+    PLATFORM_DEFAULT_LOG_DIRECTORY, COMMAND_VIEW
 from telemetry_logger import daemon
 from telemetry_logger.arguments import process_settings
+from telemetry_logger.viewer import view
 
 __author__ = 'zebraxxl'
 
@@ -37,3 +38,5 @@ if __name__ == '__main__':
         send_marker_command(settings, settings[ARGUMENT_COMMAND_PARAMETER])
     elif settings[ARGUMENT_COMMAND] == COMMAND_REPORT:
         make_report(settings)
+    elif settings[ARGUMENT_COMMAND] == COMMAND_VIEW:
+        view(settings)

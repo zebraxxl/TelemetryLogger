@@ -8,7 +8,7 @@ from consts import ARGUMENTS_DEFAULT, ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, 
     ARGUMENT_INTERVAL, ALL_COMMANDS, ARGUMENT_COMMAND, COMMAND_MARKER, ARGUMENT_COMMAND_PARAMETER, MAX_VALID_PORT, \
     COMMAND_START, COMMAND_REPORT, ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART, ARGUMENT_OUTPUT_MODULE, ALL_OUTPUT_MODULES, \
     ARGUMENT_INPUT_MODULE, ALL_INPUT_MODULES, ARGUMENT_INPUT_ADDRESS, ARGUMENT_INPUT_PORT, ARGUMENT_PROCESS_PID_FILE, \
-    ARGUMENT_DEBUG, ARGUMENT_SHOW_GRAPH_POINTS, ARGUMENT_RUNNING_LOG_CONFIG
+    ARGUMENT_DEBUG, ARGUMENT_SHOW_GRAPH_POINTS, ARGUMENT_RUNNING_LOG_CONFIG, COMMAND_VIEW
 from utils import try_to_int
 
 __author__ = 'zebraxxl'
@@ -19,7 +19,7 @@ __only_write_arguments = frozenset([ARGUMENT_PID_FILE, ARGUMENT_CONTROL_ADDR, AR
 __process_arguments = frozenset([ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX,
                                  ARGUMENT_PROCESS_PID_FILE])
 __command_need_output = frozenset([COMMAND_START, COMMAND_REPORT])
-__command_need_parameter = frozenset([COMMAND_MARKER, COMMAND_REPORT])
+__command_need_parameter = frozenset([COMMAND_MARKER, COMMAND_REPORT, COMMAND_VIEW])
 __arguments_flags = frozenset([ARGUMENT_SPLIT_GRAPHS, ARGUMENT_SUB_CHART, ARGUMENT_DEBUG, ARGUMENT_SHOW_GRAPH_POINTS])
 
 __cf_process_type = 'type'
@@ -218,6 +218,7 @@ def process_settings():
               '    restart      - restart telemetry logger daemon with new settings\n'
               '    marker NAME  - add time marker with name NAME\n'
               '    report FILE  - generate report file from telemetry log in FILE\n'
+              '    view FILE    - view telemetry in GUI viewer\n'
               'Valid settings:\n'
               '    --help                 - show this help message\n'
               '    --interval INTERVAL    - set interval for logging telemetry in seconds\n'
