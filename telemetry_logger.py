@@ -18,7 +18,7 @@ __daemon_commands = frozenset([COMMAND_START, COMMAND_STOP, COMMAND_RESTART])
 
 
 def send_marker_command(s, name):
-    # TODO: Bad code. Need to be rewrited
+    # TODO: Bad code. Need to rewrite
     url = 'http://{addr}:{port}/control?command={command}&{command_param_name}={marker_name}'.format(
         addr=s[ARGUMENT_CONTROL_ADDR], port=s[ARGUMENT_CONTROL_PORT], command=REMOTE_COMMAND_MARKER,
         command_param_name=REMOTE_COMMAND_MARKER_NAME, marker_name=urllib.quote(name)

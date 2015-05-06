@@ -8,7 +8,7 @@ from telemetry_logger.localization import PROCESS_FILTER_PID_STRING
 from telemetry_logger.viewer.viewer_window import ViewerWindow
 
 
-__author__ = 'pryanichnikov'
+__author__ = 'zebraxxl'
 
 
 def __read_all_frames(file_name):

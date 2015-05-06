@@ -1,23 +1,26 @@
+import matplotlib
+matplotlib.use('gtk3agg')
+
 from gi.repository import Gtk
 from matplotlib import pyplot
+from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 from numpy import arange, sin, pi
 from telemetry_logger.localization import get_string, TELEMETRY_STRING, PROCESSES_STRING
-from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 
 
-__author__ = 'pryanichnikov'
+__author__ = 'zebraxxl'
 
 
 class ViewerWindow:
     def on_tree_selection_changed(self, selection):
-        model, treeiter = selection.get_selected()
-        if treeiter != None:
-            telemetry_name = model[treeiter][1]
-            telemetry_data = model[treeiter][2]
+        model, tree_iterator = selection.get_selected()
+        if tree_iterator is not None:
+            telemetry_name = model[tree_iterator][1]
+            telemetry_data = model[tree_iterator][2]
             if telemetry_name and telemetry_data:
                 # Temp code for testing
                 figure, plot = pyplot.subplots()
-                t = arange(0.0,3.0,0.01)
+                t = arange(0.0, 3.0, 0.01)
                 s = sin(2*pi*t)
                 plot.plot(t, s)
 
@@ -34,6 +37,7 @@ class ViewerWindow:
             'onDeleteWindow': Gtk.main_quit,
             'onMainTreeSelectionChanged': self.on_tree_selection_changed,
         }
+        self.markers = markers
 
         builder = Gtk.Builder()
         builder.add_from_file('telemetry_logger/viewer/ui.glade')
@@ -58,7 +62,6 @@ class ViewerWindow:
                 pid_iter = self.tree_store.append(process_group_iter, [str(pid), None, None])    # TODO: ProcessInfo
                 for k in processes[process_group][pid][1]:
                     self.tree_store.append(pid_iter, [get_string(k), k, processes[process_group][pid][1][k]])
-
 
     def show(self):
         self.main_window.show_all()
