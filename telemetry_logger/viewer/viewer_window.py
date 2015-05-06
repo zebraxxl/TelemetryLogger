@@ -4,38 +4,50 @@ matplotlib.use('gtk3agg')
 from gi.repository import Gtk
 from matplotlib import pyplot
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
-from numpy import arange, sin, pi
+from matplotlib.backends.backend_gtk3 import NavigationToolbar2GTK3 as NavigationToolbar
 from telemetry_logger.localization import get_string, TELEMETRY_STRING, PROCESSES_STRING
+from telemetry_logger.viewer.plot_drawers import PLOT_DRAWERS
 
 
 __author__ = 'zebraxxl'
 
 
 class ViewerWindow:
-    def on_tree_selection_changed(self, selection):
+    def __draw_plot(self, telemetry_name, telemetry_data):
+        figure, axes = pyplot.subplots()
+        PLOT_DRAWERS[telemetry_name](telemetry_data, axes)
+
+        figure.tight_layout(pad=0)
+
+        canvas = FigureCanvas(figure)
+        canvas.set_visible(True)
+
+        last_child = self.plot_holder.get_child()
+        if last_child:
+            self.plot_holder.remove(last_child)
+
+        toolbar = NavigationToolbar(canvas, self.main_window)
+
+        vbox = Gtk.VBox()
+        vbox.pack_start(canvas, True, True, 0)
+        vbox.pack_start(toolbar, False, False, 0)
+        vbox.set_visible(True)
+
+        self.plot_holder.add(vbox)
+
+    def __on_tree_selection_changed(self, selection):
         model, tree_iterator = selection.get_selected()
         if tree_iterator is not None:
             telemetry_name = model[tree_iterator][1]
             telemetry_data = model[tree_iterator][2]
             if telemetry_name and telemetry_data:
-                # Temp code for testing
-                figure, plot = pyplot.subplots()
-                t = arange(0.0, 3.0, 0.01)
-                s = sin(2*pi*t)
-                plot.plot(t, s)
-
-                canvas = FigureCanvas(figure)
-                canvas.set_visible(True)
-
-                last_child = self.plot_holder.get_child()
-                if last_child:
-                    self.plot_holder.remove(last_child)
-                self.plot_holder.add(canvas)
+                if telemetry_name in PLOT_DRAWERS:
+                    self.__draw_plot(telemetry_name, telemetry_data)
 
     def __init__(self, settings, telemetries, processes, markers):
         self.viewer_signals = {
             'onDeleteWindow': Gtk.main_quit,
-            'onMainTreeSelectionChanged': self.on_tree_selection_changed,
+            'onMainTreeSelectionChanged': self.__on_tree_selection_changed,
         }
         self.markers = markers
 
