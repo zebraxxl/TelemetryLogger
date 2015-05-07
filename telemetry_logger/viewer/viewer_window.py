@@ -22,7 +22,7 @@ class ViewerWindow:
             figure.legend(lines, labels, 'upper right')
 
         canvas = FigureCanvas(figure)
-        canvas.set_visible(True)
+        canvas.show()
 
         last_child = self.plot_holder.get_child()
         if last_child:
@@ -46,9 +46,13 @@ class ViewerWindow:
                 if telemetry_name in PLOT_DRAWERS:
                     self.__draw_plot(telemetry_name, telemetry_data)
 
+    def __on_main_window_close(self, *args, **kwargs):
+        pyplot.close()
+        Gtk.main_quit(*args, **kwargs)
+
     def __init__(self, settings, telemetries, processes, markers):
         self.viewer_signals = {
-            'onDeleteWindow': Gtk.main_quit,
+            'onDeleteWindow': self.__on_main_window_close,
             'onMainTreeSelectionChanged': self.__on_tree_selection_changed,
         }
         self.markers = markers
