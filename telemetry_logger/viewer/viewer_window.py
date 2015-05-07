@@ -14,8 +14,8 @@ __author__ = 'zebraxxl'
 
 class ViewerWindow:
     def __draw_plot(self, telemetry_name, telemetry_data):
-        figure, axes = pyplot.subplots()
-        PLOT_DRAWERS[telemetry_name](telemetry_data, axes)
+        figure = pyplot.figure()
+        PLOT_DRAWERS[telemetry_name](telemetry_data, figure)
 
         figure.tight_layout(pad=0)
 

@@ -6,12 +6,14 @@ __author__ = 'zebraxxl'
 TIME_FORMATTER = DateFormatter('%H:%M:%S.%f')
 
 
-def draw_single_plot(data, axes):
+def draw_single_plot(data, figure):
+    axes = figure.add_subplot(1, 1, 1)
     times = [x[0] for x in data]
     values = [x[1] for x in data]
 
     axes.plot_date(times, values, '-')
     axes.xaxis.set_major_formatter(TIME_FORMATTER)
+    return [axes]
 
 
 PLOT_DRAWERS = {
