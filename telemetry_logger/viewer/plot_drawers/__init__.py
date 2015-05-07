@@ -7,6 +7,10 @@ __author__ = 'zebraxxl'
 TIME_FORMATTER = DateFormatter('%H:%M:%S.%f')
 
 
+def __get_drawer_result(axes, lines, labels=None):
+    return (axes, lines, labels)
+
+
 def __get_name(i, value, override_names):
     if override_names and isinstance(override_names, list) and len(override_names) > i:
         return get_string(override_names[i])
@@ -23,9 +27,9 @@ def draw_single_plot(data, figure):
     times = [x[0] for x in data]
     values = [x[1] for x in data]
 
-    axes.plot_date(times, values, '-')
+    line = axes.plot_date(times, values, '-')
     axes.xaxis.set_major_formatter(TIME_FORMATTER)
-    return [axes]
+    return __get_drawer_result([axes], [line])
 
 
 def draw_multiple_plot(data, figure, override_names=None, ignore_subgraphs=None):
@@ -50,10 +54,18 @@ def draw_multiple_plot(data, figure, override_names=None, ignore_subgraphs=None)
                 columns[index].append(value[1][i])
 
     axes = figure.add_subplot(1, 1, 1)
+
+    lines = list()
+    labels = list()
+
     for i in xrange(len(columns)):
-        axes.plot_date(times, columns[i], '-', label=names[i])
+        line = axes.plot_date(times, columns[i], '-', label=names[i])
         axes.xaxis.set_major_formatter(TIME_FORMATTER)
-    return [axes]
+
+        lines.extend(line)
+        labels.append(names[i])
+
+    return __get_drawer_result([axes], lines, labels=labels)
 
 
 

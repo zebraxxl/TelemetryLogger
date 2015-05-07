@@ -15,9 +15,11 @@ __author__ = 'zebraxxl'
 class ViewerWindow:
     def __draw_plot(self, telemetry_name, telemetry_data):
         figure = pyplot.figure()
-        PLOT_DRAWERS[telemetry_name](telemetry_data, figure)
+        axes, lines, labels = PLOT_DRAWERS[telemetry_name](telemetry_data, figure)
 
         figure.tight_layout(pad=0)
+        if labels is not None:
+            figure.legend(lines, labels, 'upper right')
 
         canvas = FigureCanvas(figure)
         canvas.set_visible(True)
