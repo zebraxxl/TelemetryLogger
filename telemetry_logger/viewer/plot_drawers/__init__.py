@@ -1,5 +1,5 @@
 from matplotlib.dates import DateFormatter
-from consts import TELEMETRY_CPU_PERCENT
+from telemetry_logger.consts import TELEMETRY_CPU_PERCENT
 
 __author__ = 'zebraxxl'
 
