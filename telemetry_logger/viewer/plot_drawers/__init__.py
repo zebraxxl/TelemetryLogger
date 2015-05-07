@@ -1,5 +1,6 @@
 from matplotlib.dates import DateFormatter
-from telemetry_logger.consts import TELEMETRY_CPU_PERCENT, TELEMETRY_PROCESS_MEM_PERCENT, TELEMETRY_CPU_TIMES
+from telemetry_logger.consts import TELEMETRY_CPU_PERCENT, TELEMETRY_PROCESS_MEM_PERCENT, TELEMETRY_CPU_TIMES, \
+    TELEMETRY_CPU_LOAD_AVG
 from telemetry_logger.localization import get_string
 
 __author__ = 'zebraxxl'
@@ -44,7 +45,7 @@ def draw_multiple_plot(data, figure, override_names=None, ignore_subgraphs=None)
                 continue
         columns.append(list())
         oindex2rindex[i] = len(columns) - 1
-        names[oindex2rindex[i]] = __get_name(i, data[0][1], override_names)
+        names[oindex2rindex[i]] = __get_name(i, data[0][1], override_names).decode('utf-8')
 
     for value in data:
         times.append(value[0])
@@ -70,6 +71,7 @@ def draw_multiple_plot(data, figure, override_names=None, ignore_subgraphs=None)
 
 
 PLOT_DRAWERS = {
+    TELEMETRY_CPU_LOAD_AVG: lambda d, f: draw_multiple_plot(d, f, override_names=['1 min', '5 min', '15 min']),
     TELEMETRY_CPU_TIMES: draw_multiple_plot,
     TELEMETRY_CPU_PERCENT: draw_single_plot,
 

@@ -77,6 +77,8 @@ class ViewerWindow:
                 for k in processes[process_group][pid][1]:
                     self.tree_store.append(pid_iter, [get_string(k), k, processes[process_group][pid][1][k]])
 
+        matplotlib.rc('font', family='Droid Sans')
+
     def show(self):
         self.main_window.show_all()
         Gtk.main()
