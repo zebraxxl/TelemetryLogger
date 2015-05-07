@@ -1,5 +1,5 @@
 from matplotlib.dates import DateFormatter
-from telemetry_logger.consts import TELEMETRY_CPU_PERCENT
+from telemetry_logger.consts import TELEMETRY_CPU_PERCENT, TELEMETRY_PROCESS_MEM_PERCENT
 
 __author__ = 'zebraxxl'
 
@@ -16,4 +16,6 @@ def draw_single_plot(data, axes):
 
 PLOT_DRAWERS = {
     TELEMETRY_CPU_PERCENT: draw_single_plot,
+
+    TELEMETRY_PROCESS_MEM_PERCENT: draw_single_plot,
 }
