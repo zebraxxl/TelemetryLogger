@@ -10,7 +10,6 @@ from telemetry_logger.consts import COMMAND_START, COMMAND_RESTART, COMMAND_STOP
     PLATFORM_DEFAULT_LOG_DIRECTORY, COMMAND_VIEW
 from telemetry_logger import daemon
 from telemetry_logger.arguments import process_settings
-from telemetry_logger.viewer import view
 
 __author__ = 'zebraxxl'
 
@@ -39,4 +38,5 @@ if __name__ == '__main__':
     elif settings[ARGUMENT_COMMAND] == COMMAND_REPORT:
         make_report(settings)
     elif settings[ARGUMENT_COMMAND] == COMMAND_VIEW:
+        from telemetry_logger.viewer import view
         view(settings)
