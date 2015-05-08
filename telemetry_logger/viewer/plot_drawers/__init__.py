@@ -1,6 +1,7 @@
 from matplotlib.dates import DateFormatter
 from telemetry_logger.consts import TELEMETRY_CPU_PERCENT, TELEMETRY_PROCESS_MEM_PERCENT, TELEMETRY_CPU_TIMES, \
-    TELEMETRY_CPU_LOAD_AVG, TELEMETRY_CPU_TIMES_PER_CPU
+    TELEMETRY_CPU_LOAD_AVG, TELEMETRY_CPU_TIMES_PER_CPU, TELEMETRY_CPU_PERCENT_PER_CPU, TELEMETRY_CPU_TIMES_PERCENT, \
+    TELEMETRY_CPU_TIMES_PERCENT_PER_CPU
 from telemetry_logger.localization import get_string
 
 __author__ = 'zebraxxl'
@@ -102,7 +103,7 @@ def __merge_draw_results(result, single_result):
     return result
 
 
-def draw_plots(plot_draw, data, figure, override_names=None, ignore_subgraphs=None):
+def draw_plots(plot_draw, data, figure, **kwargs):
     if plot_draw is None:
         plot_draw = draw_single_plot
 
@@ -132,8 +133,7 @@ def draw_plots(plot_draw, data, figure, override_names=None, ignore_subgraphs=No
     result = None
     i = 0
     for i in graphs:
-        single_result = plot_draw(graphs[i], figure, override_names, ignore_subgraphs,
-                                  subplots_settings=[len(graphs), 1, i])
+        single_result = plot_draw(graphs[i], figure, subplots_settings=[len(graphs), 1, i], **kwargs)
         i += 1
         result = __merge_draw_results(result, single_result)
 
@@ -145,6 +145,10 @@ PLOT_DRAWERS = {
     TELEMETRY_CPU_TIMES: draw_multiple_plot,
     TELEMETRY_CPU_PERCENT: draw_single_plot,
     TELEMETRY_CPU_TIMES_PER_CPU: lambda d, f: draw_plots(draw_multiple_plot, d, f),
+    TELEMETRY_CPU_PERCENT_PER_CPU: lambda d, f: draw_plots(None, d, f),
+    TELEMETRY_CPU_TIMES_PERCENT: draw_multiple_plot,
+    TELEMETRY_CPU_TIMES_PERCENT_PER_CPU: lambda d, f: draw_plots(None, d, f),
+
 
     TELEMETRY_PROCESS_MEM_PERCENT: draw_single_plot,
 }
