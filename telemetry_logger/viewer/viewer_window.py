@@ -20,11 +20,10 @@ class ViewerWindow:
         y_lim = 0.0
         for a in axes:
             a.grid(True, color='0.35')
-            y_lim = max(y_lim, a.get_ylim()[1])
-
-        for m in self.markers:
-            pyplot.axvline(m[0], color='0.75')
-            pyplot.text(m[0], y_lim, m[1], rotation=-90, va='top')
+            y_lim = a.get_ylim()[1]
+            for m in self.markers:
+                a.axvline(m[0], color='0.75')
+                a.text(m[0], y_lim, m[1], rotation=-90, va='top')
 
         figure.tight_layout(pad=0)
         if labels is not None:
