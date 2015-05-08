@@ -1,7 +1,7 @@
 from matplotlib.dates import DateFormatter
 from telemetry_logger.consts import TELEMETRY_CPU_PERCENT, TELEMETRY_PROCESS_MEM_PERCENT, TELEMETRY_CPU_TIMES, \
     TELEMETRY_CPU_LOAD_AVG, TELEMETRY_CPU_TIMES_PER_CPU, TELEMETRY_CPU_PERCENT_PER_CPU, TELEMETRY_CPU_TIMES_PERCENT, \
-    TELEMETRY_CPU_TIMES_PERCENT_PER_CPU
+    TELEMETRY_CPU_TIMES_PERCENT_PER_CPU, TELEMETRY_MEM_SYSTEM, TELEMETRY_MEM_SWAP
 from telemetry_logger.localization import get_string
 
 __author__ = 'zebraxxl'
@@ -149,6 +149,8 @@ PLOT_DRAWERS = {
     TELEMETRY_CPU_TIMES_PERCENT: draw_multiple_plot,
     TELEMETRY_CPU_TIMES_PERCENT_PER_CPU: lambda d, f: draw_plots(None, d, f),
 
+    TELEMETRY_MEM_SYSTEM: lambda d, f: draw_multiple_plot(d, f, ignore_subgraphs=['total', 'percent']),
+    TELEMETRY_MEM_SWAP: lambda d, f: draw_multiple_plot(d, f, ignore_subgraphs=['total', 'percent']),
 
     TELEMETRY_PROCESS_MEM_PERCENT: draw_single_plot,
 }
