@@ -17,6 +17,9 @@ class ViewerWindow:
         figure = pyplot.figure()
         axes, lines, labels = PLOT_DRAWERS[telemetry_name](telemetry_data, figure)
 
+        for a in axes:
+            a.grid(True)
+
         figure.tight_layout(pad=0)
         if labels is not None:
             figure.legend(lines, labels, 'upper right')
