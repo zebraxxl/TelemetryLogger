@@ -34,3 +34,6 @@ def get_cpu_times_percent():
 
 def get_cpu_times_percent_per_cpu():
     return psutil.cpu_times_percent(percpu=True)    # TODO: Test for interval
+
+def get_proc_threads_count(process):
+    return process.num_threads()

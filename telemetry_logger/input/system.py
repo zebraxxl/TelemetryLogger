@@ -11,9 +11,9 @@ from telemetry_logger.consts import TELEMETRY_CPU_LOAD_AVG, TELEMETRY_CPU_TIMES_
     PROCESS_INFO_PID, PROCESS_INFO_PPID, PROCESS_INFO_NAME, PROCESS_INFO_EXE, PROCESS_INFO_CMDLINE, \
     PROCESS_INFO_CREATE_TIME, PROCESS_INFO_STATUS, PROCESS_INFO_CWD, PROCESS_INFO_USERNAME, PROCESS_INFO_UIDS, \
     PROCESS_INFO_GIDS, PROCESS_INFO_TERMINAL, TELEMETRY_PROCESSES, FRAME_TYPE_TELEMETRY, ARGUMENT_INTERVAL, \
-    ARGUMENT_PROCESS_PID_FILE
+    ARGUMENT_PROCESS_PID_FILE, TELEMETRY_PROCESS_THREADS_COUNT
 from telemetry_logger.telemetry.cpu import get_load_avg, get_cpu_times, get_cpu_times_per_cpu, get_cpu_percent, get_cpu_percent_per_cpu, \
-    get_cpu_times_percent, get_cpu_times_percent_per_cpu
+    get_cpu_times_percent, get_cpu_times_percent_per_cpu, get_proc_threads_count
 from telemetry_logger.telemetry.disk import get_disk_usage, get_disk_io_counters_per_disk
 from telemetry_logger.telemetry.disk import get_disk_io_counters
 from telemetry_logger.telemetry.memory import get_mem_system, get_mem_swap, get_proc_mem_info, get_proc_mem_percent
@@ -50,6 +50,7 @@ class SystemInputModule(InputModule):
         TELEMETRY_CPU_TIMES: get_cpu_times,
         TELEMETRY_CPU_PERCENT: get_cpu_percent,
 
+        TELEMETRY_PROCESS_THREADS_COUNT: get_proc_threads_count,
         TELEMETRY_PROCESS_MEM_INFO: get_proc_mem_info,
         TELEMETRY_PROCESS_MEM_PERCENT: get_proc_mem_percent,
     }

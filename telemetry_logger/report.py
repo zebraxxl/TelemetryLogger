@@ -11,7 +11,7 @@ from consts import ARGUMENT_COMMAND_PARAMETER, TEMPLATE_DIRECTORY_NAME, TEMPLATE
     TELEMETRY_FAMILY_NET, TELEMETRY_FAMILY_DISK, TELEMETRY_DISK_USAGE, TELEMETRY_DISK_IO_COUNTERS, \
     TELEMETRY_DISK_IO_COUNTERS_PER_DISK, TELEMETRY_PROCESS_MEM_INFO, \
     TELEMETRY_PROCESS_MEM_PERCENT, ARGUMENT_PROCESS_PID, ARGUMENT_PROCESS_PATH, ARGUMENT_PROCESS_REGEX, \
-    ARGUMENT_PROCESS_PID_FILE
+    ARGUMENT_PROCESS_PID_FILE, TELEMETRY_PROCESS_THREADS_COUNT
 from graph_drawers.disk_drawers import draw_disk_usage, draw_disk_io_counters, draw_disk_io_counters_per_disk
 from graph_drawers.mem_drawers import draw_mem_system, draw_mem_swap, draw_proc_mem_info, draw_proc_mem_percent
 from graph_drawers.net_drawers import draw_net_io_counters, draw_net_io_counters_per_nic
@@ -21,7 +21,7 @@ from localization import get_string, UNKNOWN_TELEMETRY_TYPE, SYSTEM_TELEMETRY_ST
     UIDS_STRING, NAME_STRING, CWD_STRING, CREATE_TIME_STRING, TERMINAL_STRING, GIDS_STRING, \
     PROCESS_FILTER_PID_FILE_STRING
 from graph_drawers.cpu_drawers import draw_cpu_loadavg, draw_cpu_times, draw_cpu_times_per_cpu, draw_cpu_percent, \
-    draw_cpu_percent_per_cpu, draw_cpu_times_percent, draw_cpu_times_percent_per_cpu
+    draw_cpu_percent_per_cpu, draw_cpu_times_percent, draw_cpu_times_percent_per_cpu, draw_proc_threads_count
 from utils import GraphIdCounter, dump_javascript
 
 
@@ -50,6 +50,7 @@ __GRAPH_DRAWERS = {
 __PROCESS_GRAPH_DRAWERS = {
     TELEMETRY_CPU_PERCENT: draw_cpu_percent,
     TELEMETRY_CPU_TIMES: draw_cpu_times,
+    TELEMETRY_PROCESS_THREADS_COUNT: draw_proc_threads_count,
     TELEMETRY_PROCESS_MEM_INFO: draw_proc_mem_info,
     TELEMETRY_PROCESS_MEM_PERCENT: draw_proc_mem_percent,
 }
@@ -73,6 +74,7 @@ __TELEMETRY_FAMILIES = {
     TELEMETRY_NET_IO_COUNTERS: TELEMETRY_FAMILY_NET,
     TELEMETRY_NET_IO_COUNTERS_PER_NIC: TELEMETRY_FAMILY_NET,
 
+    TELEMETRY_PROCESS_THREADS_COUNT: TELEMETRY_FAMILY_CPU,
     TELEMETRY_PROCESS_MEM_INFO: TELEMETRY_FAMILY_MEM,
     TELEMETRY_PROCESS_MEM_PERCENT: TELEMETRY_FAMILY_MEM,
 }
